@@ -24,6 +24,11 @@ variable "diagnostics" {
   default = null
 }
 
+variable "ip_rules" {
+  type        = list(string)
+  description = "(Required) List of public IP or IP ranges in CIDR Format."
+}
+
 variable "firewall_rules" {
   type        = list(string)
   description = "(Required) Specifies the Firewall Rules."

@@ -28,6 +28,7 @@ module "postgresql_example" {
   location       = "canadacentral"
   resource_group = "psql-dev-rg"
 
+  ip_rules       = []
   firewall_rules = []
 
   vnet_cidr   = "172.15.0.0/16"

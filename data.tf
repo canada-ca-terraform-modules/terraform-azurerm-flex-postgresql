@@ -4,28 +4,28 @@ locals {
 }
 
 data "azurerm_key_vault" "sqlhstkv" {
-  count = var.kv_workflow_enable ? 1 : 0
+  count = (var.diagnostics != null) && var.kv_workflow_enable ? 1 : 0
 
   name                = local.kv_workflow_name
   resource_group_name = local.kv_workflow_rg
 }
 
 data "azurerm_key_vault_secret" "sqlhstsvc" {
-  count = var.kv_workflow_enable ? 1 : 0
+  count = (var.diagnostics != null) && var.kv_workflow_enable ? 1 : 0
 
   name         = "sqlhstsvc"
   key_vault_id = data.azurerm_key_vault.sqlhstkv[count.index].id
 }
 
 data "azurerm_key_vault_secret" "saloggingname" {
-  count = var.kv_workflow_enable ? 1 : 0
+  count = (var.diagnostics != null) && var.kv_workflow_enable ? 1 : 0
 
   name         = "saloggingname"
   key_vault_id = data.azurerm_key_vault.sqlhstkv[count.index].id
 }
 
 data "azurerm_storage_account" "saloggingname" {
-  count = var.kv_workflow_enable ? 1 : 0
+  count = (var.diagnostics != null) && var.kv_workflow_enable ? 1 : 0
 
   name                = data.azurerm_key_vault_secret.saloggingname[count.index].value
   resource_group_name = var.kv_workflow_salogging_rg

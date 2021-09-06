@@ -18,6 +18,7 @@ storagesize_mb = 262144
 location       = "canadacentral"
 resource_group = "XX-XXXX-XXXX-XXX-XXX"
 
+ip_rules       = []
 firewall_rules = []
 
 vnet_cidr   = "172.15.0.0/16"

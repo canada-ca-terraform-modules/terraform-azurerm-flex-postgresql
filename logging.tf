@@ -21,6 +21,8 @@ data "azurerm_monitor_diagnostic_categories" "default" {
 }
 
 resource "azurerm_monitor_diagnostic_setting" "namespace" {
+  count = var.diagnostics != null ? 1 : 0
+
   name                           = "${var.name}-pgsql-diag"
   target_resource_id             = azurerm_postgresql_flexible_server.pgsql.id
   log_analytics_workspace_id     = local.parsed_diag.log_analytics_id

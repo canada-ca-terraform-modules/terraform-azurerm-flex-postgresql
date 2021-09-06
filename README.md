@@ -30,6 +30,7 @@ Examples for this module along with various configurations can be found in the [
 | administrator_login          | string           | n/a               | yes      | The Administrator Login for the PostgreSQL Flexible Server.                                                          |
 | administrator_login_password | string           | n/a               | yes      | The Administrator Password associated with the administrator_login for the PostgreSQL Flexible Server.               |
 | databases                    | map(map(string)) | n/a               | yes      | The name, collatation, and charset of the PostgreSQL database(s). (defaults: charset="utf8", collation="en_US.utf8") |
+| ip_rules                     | list             | n/a               | yes      | List of public IP or IP ranges in CIDR Format.                                                                       |
 | firewall_rules               | list             | n/a               | yes      | Specifies the Firewall Rules.                                                                                        |
 | key_size                     | number           | `2048`            | no       | Size of key to create in the Key Vault.                                                                              |
 | key_type                     | string           | `"RSA"`           | no       | Type of key to create in the Key Vault.                                                                              |
@@ -86,7 +87,8 @@ Examples for this module along with various configurations can be found in the [
 
 ## History
 
-| Date      | Release     | Change                                      |
-| --------- | ----------- | ------------------------------------------- |
-| 202108029 | 202108029.1 | Addition of custom subnet logic             |
-| 202108025 | 202108025.1 | The initial release of the Terraform module |
+| Date     | Release    | Change                                              |
+| -------- | ---------- | --------------------------------------------------- |
+| 20210902 | 20210902.1 | Addition of an ip_rules variable and flag for debug |
+| 20210829 | 20210829.1 | Addition of custom subnet logic                     |
+| 20210825 | 20210825.1 | The initial release of the Terraform module         |
