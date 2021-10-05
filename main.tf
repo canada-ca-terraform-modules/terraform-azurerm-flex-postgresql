@@ -3,7 +3,7 @@ resource "azurerm_postgresql_flexible_server" "pgsql" {
   location            = var.location
   resource_group_name = var.resource_group
 
-  delegated_subnet_id = var.subnet_enable ? azurerm_subnet.pgsql[0].id : data.azurerm_subnet.pgsql[0].id
+  delegated_subnet_id = var.subnet_create ? azurerm_subnet.pgsql[0].id : data.azurerm_subnet.pgsql[0].id
   private_dns_zone_id = azurerm_private_dns_zone.private_dns_zone.id
 
   administrator_login    = var.administrator_login

@@ -32,14 +32,14 @@ data "azurerm_storage_account" "saloggingname" {
 }
 
 data "azurerm_virtual_network" "pgsql" {
-  count = var.vnet_enable ? 0 : 1
+  count = var.vnet_create ? 0 : 1
 
   name                = var.vnet_name
   resource_group_name = var.vnet_rg
 }
 
 data "azurerm_subnet" "pgsql" {
-  count = var.subnet_enable ? 0 : 1
+  count = var.subnet_create ? 0 : 1
 
   name                 = var.subnet_name
   virtual_network_name = var.vnet_name

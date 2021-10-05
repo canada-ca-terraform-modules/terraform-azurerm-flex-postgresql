@@ -21,18 +21,18 @@ resource_group = "XX-XXXX-XXXX-XXX-XXX"
 ip_rules       = []
 firewall_rules = []
 
+vnet_create = false
 vnet_cidr   = "172.15.0.0/16"
-vnet_enable = false
 vnet_name   = "psql-vnet"
 vnet_rg     = "XX-XXXX-XXXX-XXX-XXX"
 
-subnet_enable           = false
+subnet_create           = false
 subnet_name             = "psql-subnet"
 subnet_address_prefixes = ["172.15.8.0/22"]
 
-diagnostics = {
-  destination   = ""
-  eventhub_name = ""
-  logs          = ["all"]
-  metrics       = ["all"]
-}
+# diagnostics = {
+#   destination   = ""
+#   eventhub_name = ""
+#   logs          = ["all"]
+#   metrics       = ["all"]
+# }

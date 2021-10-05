@@ -16,6 +16,11 @@ module "postgresql_example" {
   administrator_login          = "psqladmin"
   administrator_login_password = "psql1313"
 
+  #########################################################
+  # kv_workflow_enable
+  # => ``true` then enable storing pointers to secrets in key vault
+  # => ``false` then store as default
+  #########################################################
   kv_workflow_enable = false
   # kv_workflow_name             = "XXXXX"
   # kv_workflow_rg               = "XX-XXXX-XXXX-XXX-XXX"
@@ -31,14 +36,24 @@ module "postgresql_example" {
   ip_rules       = []
   firewall_rules = []
 
-  vnet_cidr   = "172.15.0.0/16"
-  vnet_enable = true
+  #########################################################
+  # vnet_create
+  # => ``true` then enable creation of new vnet
+  # => ``false` then point to existing vnet
+  #########################################################
+  vnet_create = false
+  # vnet_cidr   = "172.15.0.0/16"
   vnet_name   = "psql-vnet"
   vnet_rg     = "XX-XXXX-XXXX-XXX-XXX"
 
-  subnet_enable           = true
-  subnet_name             = "psql-subnet"
-  subnet_address_prefixes = ["172.15.8.0/22"]
+  #########################################################
+  # subnet_create
+  # => ``true` then enable creation of new subnet
+  # => ``false` then point to existing subnet
+  #########################################################
+  subnet_create = false
+  subnet_name   = "psql-subnet"
+  # subnet_address_prefixes = ["172.15.8.0/22"]
 
   # diagnostics = {
   #   destination   = ""
