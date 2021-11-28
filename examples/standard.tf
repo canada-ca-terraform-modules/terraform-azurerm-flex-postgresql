@@ -3,7 +3,7 @@ provider "azurerm" {
 }
 
 module "postgresql_example" {
-  source = "git::https://github.com/canada-ca-terraform-modules/terraform-azurerm-flex-postgresql.git?ref=master"
+  source = "git::https://github.com/canada-ca-terraform-modules/terraform-azurerm-flex-postgresql.git?ref=v4.0.0"
 
   name = "psqlservername"
   databases = {
@@ -13,18 +13,8 @@ module "postgresql_example" {
     psqlservername4 = {}
   }
 
-  administrator_login          = "psqladmin"
-  administrator_login_password = "psql1313"
-
-  #########################################################
-  # kv_workflow_enable
-  # => ``true` then enable storing pointers to secrets in key vault
-  # => ``false` then store as default
-  #########################################################
-  kv_workflow_enable = false
-  # kv_workflow_name             = "XXXXX"
-  # kv_workflow_rg               = "XX-XXXX-XXXX-XXX-XXX"
-  # kv_workflow_salogging_rg     = "XX-XXXX-XXXX-XXX-XXX"
+  administrator_login    = "psqladmin"
+  administrator_password = "pgsql1313"
 
   sku_name       = "GP_Standard_D4s_v3"
   pgsql_version  = "13"
@@ -36,25 +26,7 @@ module "postgresql_example" {
   ip_rules       = []
   firewall_rules = []
 
-  #########################################################
-  # vnet_create
-  # => ``true` then enable creation of new vnet
-  # => ``false` then point to existing vnet
-  #########################################################
-  vnet_create = false
-  # vnet_cidr   = "172.15.0.0/16"
-  vnet_name   = "psql-vnet"
-  vnet_rg     = "XX-XXXX-XXXX-XXX-XXX"
-
-  #########################################################
-  # subnet_create
-  # => ``true` then enable creation of new subnet
-  # => ``false` then point to existing subnet
-  #########################################################
-  subnet_create = false
-  subnet_name   = "psql-subnet"
-  # subnet_address_prefixes = ["172.15.8.0/22"]
-
+  # Needs to be disabled until the following issue is resolved: https://github.com/MicrosoftDocs/azure-docs/issues/32068
   # diagnostics = {
   #   destination   = ""
   #   eventhub_name = ""
@@ -65,4 +37,29 @@ module "postgresql_example" {
   tags = {
     "tier" = "k8s"
   }
+
+  ######################################################################
+  # kv_pointer_enable (pointers in key vault for secrets state)
+  # => ``true` then state from key vault is used for creation
+  # => ``false` then state from terraform is used for creation (default)
+  ######################################################################
+  # kv_pointer_enable            = false
+  # kv_pointer_name              = "kvpointername"
+  # kv_pointer_rg                = "kvpointerrg"
+  # kv_pointer_logging_name      = "saloggingname"
+  # kv_pointer_logging_rg        = "saloggingrg"
+  # kv_pointer_sqladmin_password = "sqlhstsvc"
+
+  #########################################################
+  # vnet_create (used for storage account network rule)
+  # => ``null` then no vnet created or attached (default)
+  # => ``true` then enable creation of new vnet
+  # => ``false` then point to existing vnet
+  #########################################################
+  # vnet_create = false
+  # vnet_cidr   = "172.15.0.0/16"
+  # vnet_name   = "psql-vnet"
+  # vnet_rg     = "XX-XXXX-XXXX-XXX-XXX"
+  # subnet_name   = "psql-subnet"
+  # subnet_address_prefixes = ["172.15.8.0/22"]
 }

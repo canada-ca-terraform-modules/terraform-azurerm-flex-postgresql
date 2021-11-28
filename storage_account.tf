@@ -1,7 +1,7 @@
 # Storage Accounts
 
 resource "azurerm_storage_account" "pgsql" {
-  count = (var.diagnostics != null) && var.kv_workflow_enable ? 0 : 1
+  count = (var.diagnostics != null) && var.kv_pointer_enable ? 0 : 1
 
   name                      = substr("${replace(var.name, "-", "")}pgsql", 0, 24)
   location                  = var.location
@@ -15,9 +15,9 @@ resource "azurerm_storage_account" "pgsql" {
   min_tls_version           = "TLS1_2"
 
   network_rules {
-    default_action             = "Deny"
+    default_action             = var.vnet_create == null ? "Allow" : "Deny"
     ip_rules                   = var.ip_rules
-    virtual_network_subnet_ids = [var.subnet_create ? azurerm_subnet.pgsql[0].id : data.azurerm_subnet.pgsql[0].id]
+    virtual_network_subnet_ids = var.vnet_create == null ? [] : [var.vnet_create ? azurerm_subnet.pgsql[0].id : data.azurerm_subnet.pgsql[0].id]
     bypass                     = ["AzureServices"]
   }
 
@@ -31,7 +31,7 @@ resource "azurerm_storage_account" "pgsql" {
 }
 
 resource "azurerm_storage_container" "pgsql" {
-  count = (var.diagnostics != null) && var.kv_workflow_enable ? 0 : 1
+  count = (var.diagnostics != null) && var.kv_pointer_enable ? 0 : 1
 
   name                  = "${replace(var.name, "-", "")}pgsql"
   storage_account_name  = azurerm_storage_account.pgsql[count.index].name

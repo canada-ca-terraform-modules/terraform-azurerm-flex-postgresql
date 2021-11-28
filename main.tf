@@ -3,11 +3,11 @@ resource "azurerm_postgresql_flexible_server" "pgsql" {
   location            = var.location
   resource_group_name = var.resource_group
 
-  delegated_subnet_id = var.subnet_create ? azurerm_subnet.pgsql[0].id : data.azurerm_subnet.pgsql[0].id
+  delegated_subnet_id = var.vnet_create ? azurerm_subnet.pgsql[0].id : data.azurerm_subnet.pgsql[0].id
   private_dns_zone_id = azurerm_private_dns_zone.private_dns_zone.id
 
   administrator_login    = var.administrator_login
-  administrator_password = length(data.azurerm_key_vault_secret.sqlhstsvc) > 0 ? data.azurerm_key_vault_secret.sqlhstsvc[0].value : var.administrator_login_password
+  administrator_password = (var.kv_pointer_enable && length(data.azurerm_key_vault_secret.pointer_sqladmin_password) > 0) ? data.azurerm_key_vault_secret.pointer_sqladmin_password[0].value : var.administrator_password
 
   sku_name   = var.sku_name
   version    = var.pgsql_version
@@ -34,10 +34,10 @@ resource "azurerm_postgresql_flexible_server_database" "pgsql" {
   collation = lookup(each.value, "collation", "en_US.utf8")
 }
 
-// Configure Server Logs
-//
-// https://docs.microsoft.com/en-us/azure/postgresql/howto-configure-server-logs-in-portal
-//
+#########################################################################################
+# Configure Server Logs
+# https://docs.microsoft.com/en-us/azure/postgresql/howto-configure-server-logs-in-portal
+#########################################################################################
 
 resource "azurerm_postgresql_flexible_server_configuration" "client_min_messages" {
   name      = "client_min_messages"
@@ -123,8 +123,9 @@ resource "azurerm_postgresql_flexible_server_configuration" "log_statement" {
   value     = var.log_statement
 }
 
-// Configure Security
-//
+#########################################################################################
+# Configure Security
+#########################################################################################
 
 resource "azurerm_postgresql_flexible_server_configuration" "row_security" {
   name      = "row_security"
@@ -132,8 +133,9 @@ resource "azurerm_postgresql_flexible_server_configuration" "row_security" {
   value     = var.row_security
 }
 
-// Configure Performance
-//
+#########################################################################################
+# Configure Performance
+#########################################################################################
 
 resource "azurerm_postgresql_flexible_server_configuration" "checkpoint_warning" {
   name      = "checkpoint_warning"
@@ -225,8 +227,9 @@ resource "azurerm_postgresql_flexible_server_configuration" "work_mem" {
   value     = var.work_mem
 }
 
-// Configure Networking
-//
+#########################################################################################
+# Configure Networking
+#########################################################################################
 
 resource "azurerm_postgresql_flexible_server_firewall_rule" "pgsql" {
   for_each         = toset(var.firewall_rules)

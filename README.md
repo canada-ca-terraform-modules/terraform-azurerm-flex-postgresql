@@ -25,33 +25,38 @@ Examples for this module along with various configurations can be found in the [
 
 ## Variables
 
-| Name                         | Type             | Default             | Required | Description                                                                                                                     |
-| ---------------------------- | ---------------- | ------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| administrator_login          | string           | n/a                 | yes      | The Administrator Login for the PostgreSQL Flexible Server.                                                                     |
-| administrator_login_password | string           | n/a                 | yes      | The Administrator Password associated with the administrator_login for the PostgreSQL Flexible Server.                          |
-| databases                    | map(map(string)) | n/a                 | yes      | The name, collatation, and charset of the PostgreSQL database(s). (defaults: charset="utf8", collation="en_US.utf8")            |
-| ip_rules                     | list             | n/a                 | yes      | List of public IP or IP ranges in CIDR Format.                                                                                  |
-| firewall_rules               | list             | n/a                 | yes      | Specifies the Firewall Rules.                                                                                                   |
-| key_size                     | number           | `2048`              | no       | Size of key to create in the Key Vault.                                                                                         |
-| key_type                     | string           | `"RSA"`             | no       | Type of key to create in the Key Vault.                                                                                         |
-| kv_workflow_enable           | string           | `"false"`           | no       | If kv_workflow_enable is set to `true` then enable storing pointers to secrets in key vault else `false` then store as default. |
-| kv_workflow_name             | string           | `""`                | no       | The name used for the Key Vault Workflow.                                                                                       |
-| kv_workflow_rg               | string           | `""`                | no       | The resource group used for the Key Vault Workflow.                                                                             |
-| kv_workflow_salogging_rg     | string           | n/a                 | yes      | The storage account resource group used for the Key Vault Workflow.                                                             |
-| location                     | string           | `"canadacentral"`   | no       | Specifies the supported Azure location where the resource exists.                                                               |
-| name                         | string           | n/a                 | yes      | The name of the PostgreSQL Flexible Server.                                                                                     |
-| pgsql_version                | string           | `"9.6"`             | no       | The version of the PostgreSQL Flexible Server.                                                                                  |
-| resource_group               | string           | n/a                 | yes      | The name of the resource group in which to create the PostgreSQL Flexible Server.                                               |
-| sku_name                     | string           | `"GP_Gen5_4"`       | no       | Specifies the SKU Name for this PostgreSQL Flexible Server.                                                                     |
-| storagesize_mb               | string           | `"640000"`          | no       | Specifies the storage size the PostgreSQL Flexible Server uses.                                                                 |
-| tags                         | map              | `"<map>"`           | n/a      | A mapping of tags to assign to the resource.                                                                                    |
-| vnet_cidr                    | string           | `172.15.0.0/16`     | n/a      | Virtual Network CIDR.                                                                                                           |
-| vnet_create                  | string           | `"false"`           | n/a      | If vnet_create is set to `true` then enable creation of new vnet else `false` then point to an existing one.                    |
-| vnet_name                    | string           | n/a                 | yes      | Name for your Virtual Network.                                                                                                  |
-| vnet_rg                      | string           | `""`                | n/a      | The Virtual Network resource group.                                                                                             |
-| subnet_address_prefixes      | list             | `["172.15.8.0/22"]` | n/a      | Virtual Network Address Prefixes.                                                                                               |
-| subnet_create                | string           | `"false"`           | n/a      | If subnet_create is set to `true` then enable creation of new subnet else `false` then point to an existing one.                |
-| subnet_name                  | string           | n/a`                | yes      | Name for your Subnet.                                                                                                           |
+| Name                   | Type             | Default                | Required | Description                                                                                                        |
+| ---------------------- | ---------------- | ---------------------- | -------- | ------------------------------------------------------------------------------------------------------------------ |
+| administrator_login    | string           | n/a                    | yes      | The Administrator Login for the PostgreSQL Flexible Server.                                                        |
+| administrator_password | string           | n/a                    | yes      | The Password associated with the administrator_login for the PostgreSQL Flexible Server.                           |
+| databases              | map(map(string)) | n/a                    | yes      | The name, collation, and charset of the PostgreSQL database(s). (defaults: charset='utf8', collation='en_US.utf8') |
+| diagnostics            | object()         | null                   | no       | Diagnostic settings for those resources that support it.                                                           |
+| ip_rules               | list             | n/a                    | yes      | List of public IP or IP ranges in CIDR Format.                                                                     |
+| firewall_rules         | list             | n/a                    | yes      | Specifies the Start IP Address associated with this Firewall Rule.                                                 |
+| location               | string           | `"canadacentral"`      | no       | Specifies the supported Azure location where the resource exists.                                                  |
+| name                   | string           | n/a                    | yes      | The name of the PostgreSQL Flexible Server.                                                                        |
+| pgsql_version          | string           | `"13"`                 | no       | The version of the PostgreSQL Flexible Server.                                                                     |
+| resource_group         | string           | n/a                    | yes      | The name of the resource group in which to create the PostgreSQL Flexible Server.                                  |
+| sku_name               | string           | `"GP_Standard_D4s_v3"` | no       | Specifies the SKU Name for this PostgreSQL Flexible Server.                                                        |
+| storagesize_mb         | string           | `"640000"`             | no       | Specifies the version of PostgreSQL to use.                                                                        |
+| tags                   | map              | `"<map>"`              | no       | A mapping of tags to assign to the resource.                                                                       |
+
+## Variables (Advanced)
+
+| Name                         | Type   | Default             | Required | Description                                                                                            |
+| ---------------------------- | ------ | ------------------- | -------- | ------------------------------------------------------------------------------------------------------ |
+| kv_pointer_enable            | string | `"false"`           | no       | Flag kv_pointer_enable can either be `true` (state from key vault), or `false` (state from terraform). |
+| kv_pointer_name              | string | null                | no       | The key vault name to be used when kv_pointer_enable is set to `true`.                                 |
+| kv_workflow_rg               | string | null                | no       | The key vault resource group to be used when kv_pointer_enable is set to `true`.                       |
+| kv_pointer_logging_name      | string | null                | no       | The logging name to be looked up in key vault when kv_pointer_enable is set to `true`.                 |
+| kv_pointer_logging_rg        | string | null                | no       | The logging resource group name to be used when kv_pointer_enable is set to `true`.                    |
+| kv_pointer_sqladmin_password | string | null                | no       | The sqladmin password to be looked up in key vault when kv_pointer_enable is set to `true`."           |
+| vnet_create                  | string | null                | no       | Flag vnet_create can either be `null` (default), `true` (create vnet), or `false` (use existing vnet). |
+| vnet_cidr                    | string | `172.15.0.0/16`     | no       | Virtual Network CIDR.                                                                                  |
+| vnet_name                    | string | null                | no       | The vnet name to be used when vnet_create is either set to `true` or `false`.                          |
+| vnet_rg                      | string | null                | no       | The vnet resource group to be used when vnet_create is either set to `true` or `false`.                |
+| subnet_name                  | string | null                | no       | The subnet name to be used when vnet_create is either set to `true` or `false`.                        |
+| subnet_address_prefixes      | list   | `["172.15.8.0/22"]` | no       | Virtual Network Address Prefixes.                                                                      |
 
 ## Variables (PostgreSQL Configuration)
 
@@ -90,6 +95,7 @@ Examples for this module along with various configurations can be found in the [
 
 ## History
 
-| Date     | Release | Change                                      |
-| -------- | ------- | ------------------------------------------- |
-| 20211004 | v1.0.0  | The initial release of the Terraform module |
+| Date     | Release | Change                                                        |
+| -------- | ------- | ------------------------------------------------------------- |
+| 20211128 | v2.0.0  | Final refactor with sane defaults and optional advanced logic |
+| 20211004 | v1.0.0  | The initial release of the Terraform module                   |

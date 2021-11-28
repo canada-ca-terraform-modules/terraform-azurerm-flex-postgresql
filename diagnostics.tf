@@ -1,9 +1,9 @@
 locals {
-  diag_resource_list = var.diagnostics != null ? split("/", var.diagnostics.destination) : []
+  diag_resource_list = (var.diagnostics != null) ? split("/", var.diagnostics.destination) : []
 
-  parsed_diag = var.diagnostics != null ? {
+  parsed_diag = (var.diagnostics != null) ? {
     log_analytics_id   = contains(local.diag_resource_list, "Microsoft.OperationalInsights") ? var.diagnostics.destination : null
-    storage_account_id = contains(local.diag_resource_list, "Microsoft.Storage") ? var.diagnostics.destination : var.kv_workflow_enable ? data.azurerm_storage_account.saloggingname[0].id : azurerm_storage_account.pgsql[0].id
+    storage_account_id = contains(local.diag_resource_list, "Microsoft.Storage") ? var.diagnostics.destination : (var.kv_pointer_enable ? data.azurerm_storage_account.pointer_logging_name[0].id : azurerm_storage_account.pgsql[0].id)
     event_hub_auth_id  = contains(local.diag_resource_list, "Microsoft.EventHub") ? var.diagnostics.destination : null
     metric             = var.diagnostics.metrics
     log                = var.diagnostics.logs
@@ -16,12 +16,14 @@ locals {
   }
 }
 
-data "azurerm_monitor_diagnostic_categories" "default" {
+data "azurerm_monitor_diagnostic_categories" "postgresql_server" {
+  count = (var.diagnostics != null) ? 1 : 0
+
   resource_id = azurerm_postgresql_flexible_server.pgsql.id
 }
 
-resource "azurerm_monitor_diagnostic_setting" "namespace" {
-  count = var.diagnostics != null ? 1 : 0
+resource "azurerm_monitor_diagnostic_setting" "postgresql_server" {
+  count = (var.diagnostics != null) ? 1 : 0
 
   name                           = "${var.name}-pgsql-diag"
   target_resource_id             = azurerm_postgresql_flexible_server.pgsql.id
@@ -31,29 +33,29 @@ resource "azurerm_monitor_diagnostic_setting" "namespace" {
   storage_account_id             = local.parsed_diag.storage_account_id
 
   dynamic "log" {
-    for_each = data.azurerm_monitor_diagnostic_categories.default.logs
+    for_each = data.azurerm_monitor_diagnostic_categories.postgresql_server[0].logs
 
     content {
       category = log.value
       enabled  = contains(local.parsed_diag.log, "all") || contains(local.parsed_diag.log, log.value)
 
       retention_policy {
-        enabled = false
-        days    = 0
+        enabled = true
+        days    = 90
       }
     }
   }
 
   dynamic "metric" {
-    for_each = data.azurerm_monitor_diagnostic_categories.default.metrics
+    for_each = data.azurerm_monitor_diagnostic_categories.postgresql_server[0].metrics
 
     content {
       category = metric.value
       enabled  = contains(local.parsed_diag.metric, "all") || contains(local.parsed_diag.metric, metric.value)
 
       retention_policy {
-        enabled = false
-        days    = 0
+        enabled = true
+        days    = 90
       }
     }
   }

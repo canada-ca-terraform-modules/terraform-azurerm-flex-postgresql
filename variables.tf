@@ -4,8 +4,8 @@ variable "administrator_login" {
   description = "(Required) The Administrator Login for the PostgreSQL Flexible Server."
 }
 
-variable "administrator_login_password" {
-  description = "(Required) The Administrator Password associated with the administrator_login for the PostgreSQL Flexible Server."
+variable "administrator_password" {
+  description = "(Required) The Password associated with the administrator_login for the PostgreSQL Flexible Server."
 }
 
 variable "databases" {
@@ -14,7 +14,7 @@ variable "databases" {
 }
 
 variable "diagnostics" {
-  description = "Diagnostic settings for the PostgreSQL Flexible Server."
+  description = "Diagnostic settings for those resources that support it."
   type = object({
     destination   = string
     eventhub_name = string
@@ -31,42 +31,11 @@ variable "ip_rules" {
 
 variable "firewall_rules" {
   type        = list(string)
-  description = "(Required) Specifies the Firewall Rules."
-}
-
-variable "key_size" {
-  type        = number
-  description = "Size of key to create in the Key Vault."
-  default     = 2048
-}
-
-variable "key_type" {
-  description = "Type of key to create in the Key Vault."
-  default     = "RSA"
-}
-
-variable "kv_workflow_enable" {
-  description = "(Optional) If kv_workflow_enable is set to `true` then enable storing pointers to secrets in key vault else `false` then store as default."
-  default     = false
-}
-
-variable "kv_workflow_name" {
-  description = "(Optional) The name used for the Key Vault Workflow."
-  default     = ""
-}
-
-variable "kv_workflow_rg" {
-  description = "(Optional) The resource group used for the Key Vault Workflow."
-  default     = ""
-}
-
-variable "kv_workflow_salogging_rg" {
-  description = "(Optional) The storage account resource group used for the Key Vault Workflow."
-  default     = ""
+  description = "(Required) Specifies the Start IP Address associated with this Firewall Rule."
 }
 
 variable "location" {
-  description = "(Optional) Specifies the supported Azure location where the resources exist."
+  description = "(Optional) Specifies the supported Azure location where the resource exists."
   default     = "canadacentral"
 }
 
@@ -89,7 +58,7 @@ variable "sku_name" {
 }
 
 variable "storagesize_mb" {
-  description = "(Required) Specifies the storage size the PostgreSQL Flexible Server uses."
+  description = "(Required) Specifies the version of PostgreSQL to use."
   default     = 262144
 }
 
@@ -101,25 +70,75 @@ variable "tags" {
   }
 }
 
-variable "vnet_cidr" {
-  description = "Virtual Network CIDR."
-  type        = list(string)
-  default     = ["172.15.0.0/16"]
-}
+######################################################################
+# kv_pointer_enable (pointers in key vault for secrets state)
+# => ``true` then state from key vault is used for creation
+# => ``false` then state from terraform is used for creation (default)
+######################################################################
 
-variable "vnet_create" {
-  description = "(Optional) If vnet_create is set to `true` then enable creation of new vnet else `false` then point to an existing one."
+variable "kv_pointer_enable" {
+  description = "(Optional) Flag kv_pointer_enable can either be `true` (state from key vault), or `false` (state from terraform)."
   default     = false
 }
 
-variable "vnet_name" {
-  description = "(Optional) Name for your Virtual Network."
+variable "kv_pointer_name" {
+  description = "(Optional) The key vault name to be used when kv_pointer_enable is set to `true`."
+  default     = null
+}
+
+variable "kv_pointer_rg" {
+  description = "(Optional) The key vault resource group to be used when kv_pointer_enable is set to `true`."
+  default     = null
+}
+
+variable "kv_pointer_logging_name" {
+  description = "(Optional) The logging name to be looked up in key vault when kv_pointer_enable is set to `true`."
+  default     = null
+}
+
+variable "kv_pointer_logging_rg" {
+  description = "(Optional) The logging resource group name to be used when kv_pointer_enable is set to `true`."
+  default     = null
+}
+
+variable "kv_pointer_sqladmin_password" {
+  description = "(Optional) The sqladmin password to be looked up in key vault when kv_pointer_enable is set to `true`."
+  default     = null
+}
+
+#########################################################
+# vnet_create (used for storage account network rule)
+# => ``null` then no vnet created or attached (default)
+# => ``true` then enable creation of new vnet
+# => ``false` then point to existing vnet
+#########################################################
+
+variable "vnet_create" {
+  description = "(Optional) Flag vnet_create can either be `null` (default), `true` (create vnet), or `false` (use existing vnet)."
+  default     = null
+}
+
+variable "vnet_cidr" {
+  description = "Virtual Network CIDR."
   type        = string
+  default     = "172.15.0.0/16"
+}
+
+variable "vnet_name" {
+  description = "(Optional) The vnet name to be used when vnet_create is either set to `true` or `false`."
+  type        = string
+  default     = null
 }
 
 variable "vnet_rg" {
-  description = "(Optional) The Virtual Network resource group."
-  default     = ""
+  description = "(Optional) The vnet resource group to be used when vnet_create is either set to `true` or `false`."
+  default     = null
+}
+
+variable "subnet_name" {
+  description = "(Optional) The subnet name to be used when vnet_create is either set to `true` or `false`."
+  type        = string
+  default     = null
 }
 
 variable "subnet_address_prefixes" {
@@ -128,17 +147,9 @@ variable "subnet_address_prefixes" {
   default     = ["172.15.8.0/22"]
 }
 
-variable "subnet_create" {
-  description = "(Optional) If subnet_create is set to `true` then enable creation of new subnet else `false` then point to an existing one."
-  default     = false
-}
-
-variable "subnet_name" {
-  description = "(Optional) Name for your Subnet."
-  type        = string
-}
-
+#########################################################
 # Parameters
+#########################################################
 
 variable "client_min_messages" {
   description = "(Optional) Sets the message levels that are sent to the client."

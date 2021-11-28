@@ -1,15 +1,10 @@
-name = var.managed_postgresql_name
+name = "pgsqlservername"
 databases = {
   psqlservername1 = { collation = "en_US.utf8" }
 }
 
-administrator_login          = "pgsqladmin"
-administrator_login_password = "psql1313"
-
-kv_workflow_enable = false
-# kv_workflow_name             = "XXXXX"
-# kv_workflow_rg               = "XX-XXXX-XXXX-XXX-XXX"
-# kv_workflow_salogging_rg     = "XX-XXXX-XXXX-XXX-XXX"
+administrator_login    = "pgsqladmin"
+administrator_password = "pgsql1313"
 
 sku_name       = "GP_Standard_D4s_v3"
 pgsql_version  = "13"
@@ -20,19 +15,3 @@ resource_group = "XX-XXXX-XXXX-XXX-XXX"
 
 ip_rules       = []
 firewall_rules = []
-
-vnet_create = false
-vnet_cidr   = "172.15.0.0/16"
-vnet_name   = "psql-vnet"
-vnet_rg     = "XX-XXXX-XXXX-XXX-XXX"
-
-subnet_create           = false
-subnet_name             = "psql-subnet"
-subnet_address_prefixes = ["172.15.8.0/22"]
-
-# diagnostics = {
-#   destination   = ""
-#   eventhub_name = ""
-#   logs          = ["all"]
-#   metrics       = ["all"]
-# }
