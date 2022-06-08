@@ -9,7 +9,7 @@ resource "azurerm_virtual_network" "pgsql" {
   count = (var.vnet_create == true) ? 1 : 0
 
   name                = var.vnet_name
-  location            = var.vnet_rg
+  location            = var.location
   resource_group_name = var.resource_group
   address_space       = [var.vnet_cidr]
 }
