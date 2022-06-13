@@ -39,6 +39,7 @@ Examples for this module along with various configurations can be found in the [
 | resource_group         | string           | n/a                    | yes      | The name of the resource group in which to create the PostgreSQL Flexible Server.                                  |
 | sku_name               | string           | `"GP_Standard_D4s_v3"` | no       | Specifies the SKU Name for this PostgreSQL Flexible Server.                                                        |
 | storagesize_mb         | string           | `"640000"`             | no       | Specifies the version of PostgreSQL to use.                                                                        |
+| geo_redundant_backup_enabled    | string           | `"false"`                    | no      | (Optional) Is Geo-Redundant backup enabled on the PostgreSQL Flexible Server.                                                        |
 | tags                   | map              | `"<map>"`              | no       | A mapping of tags to assign to the resource.                                                                       |
 
 ## Variables (Advanced)

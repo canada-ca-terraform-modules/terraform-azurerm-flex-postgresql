@@ -13,7 +13,8 @@ resource "azurerm_postgresql_flexible_server" "pgsql" {
   version    = var.pgsql_version
   storage_mb = var.storagesize_mb
 
-  backup_retention_days = 35
+  backup_retention_days         = 35
+  geo_redundant_backup_enabled  = var. geo_redundant_backup_enabled
 
   tags = var.tags
 

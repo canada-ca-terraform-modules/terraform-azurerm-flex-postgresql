@@ -34,6 +34,12 @@ variable "firewall_rules" {
   description = "(Required) Specifies the Start IP Address associated with this Firewall Rule."
 }
 
+variable "geo_redundant_backup_enabled" {
+  description = "(Optional) Is Geo-Redundant backup enabled on the PostgreSQL Flexible Server."
+  type        = bool
+  default     = false
+}
+
 variable "location" {
   description = "(Optional) Specifies the supported Azure location where the resource exists."
   default     = "canadacentral"
