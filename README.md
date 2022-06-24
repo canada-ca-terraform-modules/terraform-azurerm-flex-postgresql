@@ -51,13 +51,10 @@ Examples for this module along with various configurations can be found in the [
 | kv_workflow_rg               | string | null                | no       | The key vault resource group to be used when kv_pointer_enable is set to `true`.                       |
 | kv_pointer_logging_name      | string | null                | no       | The logging name to be looked up in key vault when kv_pointer_enable is set to `true`.                 |
 | kv_pointer_logging_rg        | string | null                | no       | The logging resource group name to be used when kv_pointer_enable is set to `true`.                    |
-| kv_pointer_sqladmin_password | string | null                | no       | The sqladmin password to be looked up in key vault when kv_pointer_enable is set to `true`."           |
-| vnet_create                  | string | null                | no       | Flag vnet_create can either be `null` (default), `true` (create vnet), or `false` (use existing vnet). |
-| vnet_cidr                    | string | `172.15.0.0/16`     | no       | Virtual Network CIDR.                                                                                  |
-| vnet_name                    | string | null                | no       | The vnet name to be used when vnet_create is either set to `true` or `false`.                          |
-| vnet_rg                      | string | null                | no       | The vnet resource group to be used when vnet_create is either set to `true` or `false`.                |
-| subnet_name                  | string | null                | no       | The subnet name to be used when vnet_create is either set to `true` or `false`.                        |
-| subnet_address_prefixes      | list   | `["172.15.8.0/22"]` | no       | Virtual Network Address Prefixes.                                                                      |
+| kv_pointer_sqladmin_password | string | null                | no       | The sqladmin password to be looked up in key vault when kv_pointer_enable is set to `true`.           |
+| subnet_id | string | null                | no       | The subnet where you want the database created. The subnet must be delegated to Microsoft.DBforPostgreSQL/flexibleServers.           |
+| private_dns_zone_id | string | null                | no       | The ID of the private DNS zone to create the PostgreSQL Flexible Server. The private DNS zone must end with the suffix .postgres.database.azure.com.           |
+
 
 ## Variables (PostgreSQL Configuration)
 

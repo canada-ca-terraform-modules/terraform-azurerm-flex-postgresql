@@ -113,48 +113,17 @@ variable "kv_pointer_sqladmin_password" {
 }
 
 #########################################################
-# vnet_create (used for storage account network rule)
-# => ``null` then no vnet created or attached (default)
-# => ``true` then enable creation of new vnet
-# => ``false` then point to existing vnet
+# Virtual Network Injection 
 #########################################################
 
-variable "vnet_create" {
-  description = "(Optional) Flag vnet_create can either be `null` (default), `true` (create vnet), or `false` (use existing vnet)."
-  default     = null
-}
-
-variable "vnet_cidr" {
-  description = "Virtual Network CIDR."
-  type        = string
-  default     = "172.15.0.0/16"
-}
-
-variable "vnet_name" {
-  description = "(Optional) The vnet name to be used when vnet_create is either set to `true` or `false`."
+variable "subnet_id" {
+  description = "The subnet where you want the database created. The subnet must be delegated to Microsoft.DBforPostgreSQL/flexibleServers."
   type        = string
   default     = null
-}
-
-variable "vnet_rg" {
-  description = "(Optional) The vnet resource group to be used when vnet_create is either set to `true` or `false`."
-  default     = null
-}
-
-variable "subnet_name" {
-  description = "(Optional) The subnet name to be used when vnet_create is either set to `true` or `false`."
-  type        = string
-  default     = null
-}
-
-variable "subnet_address_prefixes" {
-  description = "Virtual Network Address Prefixes."
-  type        = list(string)
-  default     = ["172.15.8.0/22"]
 }
 
 variable "private_dns_zone_id" {
-  description = "The ID of the private DNS zone to create the PostgreSQL Flexible Server. Changing this forces a new PostgreSQL Flexible Server to be created."
+  description = "The ID of the private DNS zone to create the PostgreSQL Flexible Server. The private DNS zone must end with the suffix .postgres.database.azure.com."
   type        = string
   default     = null
 }

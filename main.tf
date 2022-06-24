@@ -3,7 +3,7 @@ resource "azurerm_postgresql_flexible_server" "pgsql" {
   location            = var.location
   resource_group_name = var.resource_group
 
-  delegated_subnet_id = var.vnet_create ? azurerm_subnet.pgsql[0].id : data.azurerm_subnet.pgsql[0].id
+  delegated_subnet_id = var.subnet_id
   private_dns_zone_id = var.private_dns_zone_id
 
   administrator_login    = var.administrator_login
@@ -23,8 +23,6 @@ resource "azurerm_postgresql_flexible_server" "pgsql" {
       tags
     ]
   }
-
-  depends_on = [azurerm_private_dns_zone_virtual_network_link.private_dns_zone_vnet_link]
 }
 
 resource "azurerm_postgresql_flexible_server_database" "pgsql" {
