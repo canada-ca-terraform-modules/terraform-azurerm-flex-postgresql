@@ -66,7 +66,7 @@ Examples for this module along with various configurations can be found in the [
 | debug_print_parse                     | string | `"off"`     | no       | Logs each query's parse tree.                                                                                                        |
 | debug_print_plan                      | string | `"off"`     | no       | Logs each query's execution plan.                                                                                                    |
 | debug_print_rewritten                 | string | `"off"`     | no       | Logs each query's rewritten parse tree.                                                                                              |
-| log_checkpoints                       | string | `"off"`     | no       | Logs each checkpoint.                                                                                                                |
+| log_checkpoints                       | string | `"on"`     | no       | Logs each checkpoint.                                                                                                                |
 | log_connections                       | string | `"on"`      | no       | Logs each successful connection.                                                                                                     |
 | log_disconnections                    | string | `"on"`      | no       | Logs end of a session, including duration.                                                                                           |
 | log_duration                          | string | `"off"`     | no       | Logs the duration of each completed SQL statement.                                                                                   |
