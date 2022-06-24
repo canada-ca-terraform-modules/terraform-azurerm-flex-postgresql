@@ -69,18 +69,6 @@ resource "azurerm_postgresql_flexible_server_configuration" "log_checkpoints" {
   value     = var.log_checkpoints
 }
 
-resource "azurerm_postgresql_flexible_server_configuration" "log_connections" {
-  name      = "log_connections"
-  server_id = azurerm_postgresql_flexible_server.pgsql.id
-  value     = var.log_connections
-}
-
-resource "azurerm_postgresql_flexible_server_configuration" "log_disconnections" {
-  name      = "log_disconnections"
-  server_id = azurerm_postgresql_flexible_server.pgsql.id
-  value     = var.log_disconnections
-}
-
 resource "azurerm_postgresql_flexible_server_configuration" "log_duration" {
   name      = "log_duration"
   server_id = azurerm_postgresql_flexible_server.pgsql.id
@@ -189,12 +177,6 @@ resource "azurerm_postgresql_flexible_server_configuration" "pgms_wait_sampling_
   name      = "pgms_wait_sampling.query_capture_mode"
   server_id = azurerm_postgresql_flexible_server.pgsql.id
   value     = var.pgms_wait_sampling_query_capture_mode
-}
-
-resource "azurerm_postgresql_flexible_server_configuration" "synchronous_commit" {
-  name      = "synchronous_commit"
-  server_id = azurerm_postgresql_flexible_server.pgsql.id
-  value     = var.synchronous_commit
 }
 
 resource "azurerm_postgresql_flexible_server_configuration" "temp_buffers" {
