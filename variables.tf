@@ -179,7 +179,7 @@ variable "debug_print_rewritten" {
 
 variable "log_checkpoints" {
   description = "(Optional) Logs each checkpoint."
-  default     = "off"
+  default     = "on"
 }
 
 variable "log_connections" {
