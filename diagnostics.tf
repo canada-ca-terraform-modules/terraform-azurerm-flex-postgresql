@@ -1,10 +1,10 @@
 locals {
-  diag_resource_list = (var.diagnostics != null) ? split("/", var.diagnostics.destination) : []
+  diag_resource_list = (var.diagnostics != null) ? split("/", lower(var.diagnostics.destination)) : []
 
   parsed_diag = (var.diagnostics != null) ? {
-    log_analytics_id   = contains(local.diag_resource_list, "Microsoft.OperationalInsights") ? var.diagnostics.destination : null
-    storage_account_id = contains(local.diag_resource_list, "Microsoft.Storage") ? var.diagnostics.destination : (var.kv_pointer_enable ? data.azurerm_storage_account.pointer_logging_name[0].id : azurerm_storage_account.pgsql[0].id)
-    event_hub_auth_id  = contains(local.diag_resource_list, "Microsoft.EventHub") ? var.diagnostics.destination : null
+    log_analytics_id   = contains(local.diag_resource_list, "microsoft.operationalinsights") ? var.diagnostics.destination : null
+    storage_account_id = contains(local.diag_resource_list, "microsoft.storage") ? var.diagnostics.destination : (var.kv_pointer_enable ? data.azurerm_storage_account.pointer_logging_name[0].id : azurerm_storage_account.pgsql[0].id)
+    event_hub_auth_id  = contains(local.diag_resource_list, "microsoft.eventhub") ? var.diagnostics.destination : null
     metric             = var.diagnostics.metrics
     log                = var.diagnostics.logs
     } : {
