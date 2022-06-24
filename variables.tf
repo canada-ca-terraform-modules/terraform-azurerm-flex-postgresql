@@ -147,6 +147,12 @@ variable "subnet_address_prefixes" {
   default     = ["172.15.8.0/22"]
 }
 
+variable "private_dns_zone_id" {
+  description = "The ID of the private DNS zone to create the PostgreSQL Flexible Server. Changing this forces a new PostgreSQL Flexible Server to be created."
+  type        = string
+  default     = null
+}
+
 #########################################################
 # Parameters
 #########################################################

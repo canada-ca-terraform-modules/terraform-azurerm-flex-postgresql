@@ -33,15 +33,3 @@ resource "azurerm_subnet" "pgsql" {
     }
   }
 }
-
-resource "azurerm_private_dns_zone" "private_dns_zone" {
-  name                = "${var.name}-zone.postgres.database.azure.com"
-  resource_group_name = var.resource_group
-}
-
-resource "azurerm_private_dns_zone_virtual_network_link" "private_dns_zone_vnet_link" {
-  name                  = "${var.name}-link"
-  private_dns_zone_name = azurerm_private_dns_zone.private_dns_zone.name
-  virtual_network_id    = var.vnet_create ? azurerm_virtual_network.pgsql[0].id : data.azurerm_virtual_network.pgsql[0].id
-  resource_group_name   = var.resource_group
-}
