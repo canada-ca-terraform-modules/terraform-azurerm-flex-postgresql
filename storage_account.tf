@@ -1,7 +1,7 @@
 # Storage Accounts
 
 resource "azurerm_storage_account" "pgsql" {
-  count = (var.diagnostics != null) && var.kv_pointer_enable ? 0 : 1
+  count = var.create_log_sa ? 1 : 0
 
   name                            = substr("${replace(var.name, "-", "")}pgsql", 0, 24)
   location                        = var.location
@@ -31,7 +31,7 @@ resource "azurerm_storage_account" "pgsql" {
 }
 
 resource "azurerm_storage_container" "pgsql" {
-  count = (var.diagnostics != null) && var.kv_pointer_enable ? 0 : 1
+  count = var.create_log_sa ? 1 : 0
 
   name                  = "${replace(var.name, "-", "")}pgsql"
   storage_account_name  = azurerm_storage_account.pgsql[count.index].name

@@ -13,17 +13,6 @@ variable "databases" {
   description = "(Required) The name, collation, and charset of the PostgreSQL database(s). (defaults: charset='utf8', collation='en_US.utf8')"
 }
 
-variable "diagnostics" {
-  description = "Diagnostic settings for those resources that support it."
-  type = object({
-    destination   = string
-    eventhub_name = string
-    logs          = list(string)
-    metrics       = list(string)
-  })
-  default = null
-}
-
 variable "ip_rules" {
   type        = list(string)
   description = "(Required) List of public IP or IP ranges in CIDR Format."
@@ -76,6 +65,27 @@ variable "tags" {
   }
 }
 
+#########################################################
+# Logging
+#########################################################
+
+variable "diagnostics" {
+  description = "Diagnostic settings for those resources that support it."
+  type = object({
+    destination   = string
+    eventhub_name = string
+    logs          = list(string)
+    metrics       = list(string)
+  })
+  default = null
+}
+
+variable "create_log_sa" {
+  description = "(Optional) Creates a storage account to be used for diagnostics logging of the PostgreSQL database created if the variable is set to `true`."
+  type        = bool
+  default     = false
+}
+
 ######################################################################
 # kv_pointer_enable (pointers in key vault for secrets state)
 # => ``true` then state from key vault is used for creation
@@ -94,16 +104,6 @@ variable "kv_pointer_name" {
 
 variable "kv_pointer_rg" {
   description = "(Optional) The key vault resource group to be used when kv_pointer_enable is set to `true`."
-  default     = null
-}
-
-variable "kv_pointer_logging_name" {
-  description = "(Optional) The logging name to be looked up in key vault when kv_pointer_enable is set to `true`."
-  default     = null
-}
-
-variable "kv_pointer_logging_rg" {
-  description = "(Optional) The logging resource group name to be used when kv_pointer_enable is set to `true`."
   default     = null
 }
 
