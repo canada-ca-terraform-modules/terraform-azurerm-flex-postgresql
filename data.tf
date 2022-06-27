@@ -20,16 +20,24 @@ data "azurerm_key_vault_secret" "pointer_sqladmin_password" {
   key_vault_id = data.azurerm_key_vault.pointer[count.index].id
 }
 
-data "azurerm_key_vault_secret" "pointer_logging_name" {
-  count = var.kv_pointer_enable ? 1 : 0
+#########################################################
+# vnet_create (used for storage account network rule)
+# => ``null` then no vnet created or attached (default)
+# => ``true` then enable creation of new vnet
+# => ``false` then point to existing vnet
+#########################################################
 
-  name         = var.kv_pointer_logging_name
-  key_vault_id = data.azurerm_key_vault.pointer[count.index].id
+data "azurerm_virtual_network" "pgsql" {
+  count = (var.vnet_create == false) ? 1 : 0
+
+  name                = var.vnet_name
+  resource_group_name = var.vnet_rg
 }
 
-data "azurerm_storage_account" "pointer_logging_name" {
-  count = var.kv_pointer_enable ? 1 : 0
+data "azurerm_subnet" "pgsql" {
+  count = (var.vnet_create == false) ? 1 : 0
 
-  name                = data.azurerm_key_vault_secret.pointer_logging_name[count.index].value
-  resource_group_name = var.kv_pointer_logging_rg
+  name                 = var.subnet_name
+  virtual_network_name = var.vnet_name
+  resource_group_name  = var.vnet_rg
 }

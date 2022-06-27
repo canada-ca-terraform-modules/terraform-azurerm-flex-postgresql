@@ -3,7 +3,7 @@ locals {
 
   parsed_diag = (var.diagnostics != null) ? {
     log_analytics_id   = contains(local.diag_resource_list, "microsoft.operationalinsights") ? var.diagnostics.destination : null
-    storage_account_id = contains(local.diag_resource_list, "microsoft.storage") ? var.diagnostics.destination : (var.kv_pointer_enable ? data.azurerm_storage_account.pointer_logging_name[0].id : azurerm_storage_account.pgsql[0].id)
+    storage_account_id = contains(local.diag_resource_list, "microsoft.storage") ? var.diagnostics.destination : var.create_log_sa ? azurerm_storage_account.pgsql[0].id : null
     event_hub_auth_id  = contains(local.diag_resource_list, "microsoft.eventhub") ? var.diagnostics.destination : null
     metric             = var.diagnostics.metrics
     log                = var.diagnostics.logs
