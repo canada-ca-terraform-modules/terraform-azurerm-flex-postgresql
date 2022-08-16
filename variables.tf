@@ -1,4 +1,8 @@
-# Server
+# Variables
+
+###############
+### Server ###
+###############
 
 variable "administrator_login" {
   description = "(Required) The Administrator Login for the PostgreSQL Flexible Server."
@@ -50,7 +54,7 @@ variable "resource_group" {
 
 variable "sku_name" {
   description = "(Required) Specifies the SKU Name for this PostgreSQL Flexible Server."
-  default     = "GP_Standard_D4s_v3"
+  default     = "GP_Standard_D4ds_v4"
 }
 
 variable "storagesize_mb" {
@@ -66,9 +70,25 @@ variable "tags" {
   }
 }
 
-#########################################################
-# Logging
-#########################################################
+##################
+### Networking ###
+##################
+
+variable "subnet_id" {
+  description = "The subnet where you want the database created. The subnet must be delegated to Microsoft.DBforPostgreSQL/flexibleServers."
+  type        = string
+  default     = null
+}
+
+variable "private_dns_zone_id" {
+  description = "The ID of the private DNS zone to create the PostgreSQL Flexible Server. The private DNS zone must end with the suffix .postgres.database.azure.com."
+  type        = string
+  default     = null
+}
+
+###############
+### Logging ###
+###############
 
 variable "diagnostics" {
   description = "Diagnostic settings for those resources that support it."
@@ -86,6 +106,10 @@ variable "create_log_sa" {
   type        = bool
   default     = false
 }
+
+##################
+### KV Pointer ###
+##################
 
 ######################################################################
 # kv_pointer_enable (pointers in key vault for secrets state)
@@ -113,25 +137,9 @@ variable "kv_pointer_sqladmin_password" {
   default     = null
 }
 
-#########################################################
-# Virtual Network Injection 
-#########################################################
-
-variable "subnet_id" {
-  description = "The subnet where you want the database created. The subnet must be delegated to Microsoft.DBforPostgreSQL/flexibleServers."
-  type        = string
-  default     = null
-}
-
-variable "private_dns_zone_id" {
-  description = "The ID of the private DNS zone to create the PostgreSQL Flexible Server. The private DNS zone must end with the suffix .postgres.database.azure.com."
-  type        = string
-  default     = null
-}
-
-#########################################################
-# Parameters
-#########################################################
+##################
+### Parameters ###
+##################
 
 variable "client_min_messages" {
   description = "(Optional) Sets the message levels that are sent to the client."

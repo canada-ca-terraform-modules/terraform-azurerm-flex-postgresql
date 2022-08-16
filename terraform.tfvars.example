@@ -1,12 +1,12 @@
 name = "pgsqlservername"
 databases = {
-  psqlservername1 = { collation = "en_US.utf8" }
+  psqlservername1 = { charset = "utf8", collation = "en_US.utf8" }
 }
 
 administrator_login    = "pgsqladmin"
 administrator_password = "pgsql1313"
 
-sku_name       = "GP_Standard_D4s_v3"
+sku_name       = "GP_Standard_D4ds_v4"
 pgsql_version  = "13"
 storagesize_mb = 262144
 
@@ -15,3 +15,15 @@ resource_group = "XX-XXXX-XXXX-XXX-XXX"
 
 ip_rules       = []
 firewall_rules = []
+
+diagnostics = {
+  destination   = ""
+  eventhub_name = ""
+  logs          = ["all"]
+  metrics       = ["all"]
+}
+create_log_sa = true
+
+tags = {
+  "tier" = "k8s"
+}

@@ -1,3 +1,9 @@
+# Outputs
+
+###############
+### Server ###
+###############
+
 output "id" {
   value = azurerm_postgresql_flexible_server.pgsql.id
 }

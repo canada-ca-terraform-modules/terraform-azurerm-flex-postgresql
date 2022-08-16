@@ -1,6 +1,6 @@
 # Terraform for Azure Managed Database PostgreSQL Flexible Server
 
-Creates a PostgreSQL instance using the Azure Managed Database for PostgreSQL Flexible Server.
+Creates a PostgreSQL instance using the Azure Database for PostgreSQL - Flexible Server.
 
 ## Security Controls
 
@@ -17,7 +17,7 @@ Azure Database for PostgreSQL supports a subset of key extensions that are liste
 
 For instance, application teams that have functionality that needs encryption can enable pg_crypto by using the `CREATE EXTENSION` command.
 
-https://docs.microsoft.com/en-us/azure/postgresql/concepts-extensions
+https://docs.microsoft.com/en-us/azure/postgresql/flexible-server/concepts-extensions
 
 ## Usage
 
@@ -25,45 +25,44 @@ Examples for this module along with various configurations can be found in the [
 
 ## Variables
 
-| Name                   | Type             | Default                | Required | Description                                                                                                        |
-| ---------------------- | ---------------- | ---------------------- | -------- | ------------------------------------------------------------------------------------------------------------------ |
-| administrator_login    | string           | n/a                    | yes      | The Administrator Login for the PostgreSQL Flexible Server.                                                        |
-| administrator_password | string           | n/a                    | yes      | The Password associated with the administrator_login for the PostgreSQL Flexible Server.                           |
-| databases              | map(map(string)) | n/a                    | yes      | The name, collation, and charset of the PostgreSQL database(s). (defaults: charset='utf8', collation='en_US.utf8') |
-| diagnostics            | object()         | null                   | no       | Diagnostic settings for those resources that support it.                                                           |
-| create_log_sa          | bool             | false                  | no       | (Optional) Creates a storage account to be used for diagnostics logging of the PostgreSQL database created if the variable is set to `true`.                                                           |
-| ip_rules               | list             | n/a                    | yes      | List of public IP or IP ranges in CIDR Format.                                                                     |
-| firewall_rules         | list             | n/a                    | yes      | Specifies the Start IP Address associated with this Firewall Rule.                                                 |
-| location               | string           | `"canadacentral"`      | no       | Specifies the supported Azure location where the resource exists.                                                  |
-| name                   | string           | n/a                    | yes      | The name of the PostgreSQL Flexible Server.                                                                        |
-| pgsql_version          | string           | `"13"`                 | no       | The version of the PostgreSQL Flexible Server.                                                                     |
-| resource_group         | string           | n/a                    | yes      | The name of the resource group in which to create the PostgreSQL Flexible Server.                                  |
-| sku_name               | string           | `"GP_Standard_D4s_v3"` | no       | Specifies the SKU Name for this PostgreSQL Flexible Server.                                                        |
-| storagesize_mb         | string           | `"640000"`             | no       | Specifies the version of PostgreSQL to use.                                                                        |
-| geo_redundant_backup_enabled    | string           | `"false"`                    | no      | (Optional) Is Geo-Redundant backup enabled on the PostgreSQL Flexible Server.                                                        |
-| tags                   | map              | `"<map>"`              | no       | A mapping of tags to assign to the resource.                                                                       |
+| Name                         | Type             | Default                | Required | Description                                                                                                                                  |
+|------------------------------|------------------|------------------------|----------|----------------------------------------------------------------------------------------------------------------------------------------------|
+| administrator_login          | string           | n/a                    | yes      | The Administrator Login for the PostgreSQL Flexible Server.                                                                                  |
+| administrator_password       | string           | n/a                    | yes      | The Password associated with the administrator_login for the PostgreSQL Flexible Server.                                                     |
+| databases                    | map(map(string)) | n/a                    | yes      | The name, collation, and charset of the PostgreSQL database(s). (defaults: charset='utf8', collation='en_US.utf8')                           |
+| diagnostics                  | object()         | null                   | no       | Diagnostic settings for those resources that support it.                                                                                     |
+| create_log_sa                | bool             | false                  | no       | (Optional) Creates a storage account to be used for diagnostics logging of the PostgreSQL database created if the variable is set to `true`. |
+| ip_rules                     | list             | n/a                    | yes      | List of public IP or IP ranges in CIDR Format.                                                                                               |
+| firewall_rules               | list             | n/a                    | yes      | Specifies the Start IP Address associated with this Firewall Rule.                                                                           |
+| location                     | string           | `"canadacentral"`      | no       | Specifies the supported Azure location where the resource exists.                                                                            |
+| name                         | string           | n/a                    | yes      | The name of the PostgreSQL Flexible Server.                                                                                                  |
+| pgsql_version                | string           | `"13"`                 | no       | The version of the PostgreSQL Flexible Server.                                                                                               |
+| resource_group               | string           | n/a                    | yes      | The name of the resource group in which to create the PostgreSQL Flexible Server.                                                            |
+| sku_name                     | string           | `"GP_Standard_D4s_v3"` | no       | Specifies the SKU Name for this PostgreSQL Flexible Server.                                                                                  |
+| storagesize_mb               | string           | `"640000"`             | no       | Specifies the version of PostgreSQL to use.                                                                                                  |
+| geo_redundant_backup_enabled | string           | `"false"`              | no       | (Optional) Is Geo-Redundant backup enabled on the PostgreSQL Flexible Server.                                                                |
+| tags                         | map              | `"<map>"`              | no       | A mapping of tags to assign to the resource.                                                                                                 |
 
 ## Variables (Advanced)
 
-| Name                         | Type   | Default             | Required | Description                                                                                            |
-| ---------------------------- | ------ | ------------------- | -------- | ------------------------------------------------------------------------------------------------------ |
-| kv_pointer_enable            | string | `"false"`           | no       | Flag kv_pointer_enable can either be `true` (state from key vault), or `false` (state from terraform). |
-| kv_pointer_name              | string | null                | no       | The key vault name to be used when kv_pointer_enable is set to `true`.                                 |
-| kv_pointer_rg               | string | null                | no       | The key vault resource group to be used when kv_pointer_enable is set to `true`.                       |
-| kv_pointer_sqladmin_password | string | null                | no       | The sqladmin password to be looked up in key vault when kv_pointer_enable is set to `true`.           |
-| subnet_id | string | null                | no       | The subnet where you want the database created. The subnet must be delegated to Microsoft.DBforPostgreSQL/flexibleServers.           |
-| private_dns_zone_id | string | null                | no       | The ID of the private DNS zone to create the PostgreSQL Flexible Server. The private DNS zone must end with the suffix .postgres.database.azure.com.           |
-
+| Name                         | Type   | Default   | Required | Description                                                                                                                                          |
+|------------------------------|--------|-----------|----------|------------------------------------------------------------------------------------------------------------------------------------------------------|
+| kv_pointer_enable            | string | `"false"` | no       | Flag kv_pointer_enable can either be `true` (state from key vault), or `false` (state from terraform).                                               |
+| kv_pointer_name              | string | null      | no       | The key vault name to be used when kv_pointer_enable is set to `true`.                                                                               |
+| kv_pointer_rg                | string | null      | no       | The key vault resource group to be used when kv_pointer_enable is set to `true`.                                                                     |
+| kv_pointer_sqladmin_password | string | null      | no       | The sqladmin password to be looked up in key vault when kv_pointer_enable is set to `true`.                                                          |
+| subnet_id                    | string | null      | no       | The subnet where you want the database created. The subnet must be delegated to Microsoft.DBforPostgreSQL/flexibleServers.                           |
+| private_dns_zone_id          | string | null      | no       | The ID of the private DNS zone to create the PostgreSQL Flexible Server. The private DNS zone must end with the suffix .postgres.database.azure.com. |
 
 ## Variables (PostgreSQL Configuration)
 
 | Name                                  | Type   | Default     | Required | Description                                                                                                                          |
-| ------------------------------------- | ------ | ----------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+|---------------------------------------|--------|-------------|----------|--------------------------------------------------------------------------------------------------------------------------------------|
 | client_min_messages                   | string | `"log"`     | no       | Sets the message levels that are sent to the client.                                                                                 |
 | debug_print_parse                     | string | `"off"`     | no       | Logs each query's parse tree.                                                                                                        |
 | debug_print_plan                      | string | `"off"`     | no       | Logs each query's execution plan.                                                                                                    |
 | debug_print_rewritten                 | string | `"off"`     | no       | Logs each query's rewritten parse tree.                                                                                              |
-| log_checkpoints                       | string | `"on"`     | no       | Logs each checkpoint.                                                                                                                |
+| log_checkpoints                       | string | `"on"`      | no       | Logs each checkpoint.                                                                                                                |
 | log_connections                       | string | `"on"`      | no       | Logs each successful connection.                                                                                                     |
 | log_disconnections                    | string | `"on"`      | no       | Logs end of a session, including duration.                                                                                           |
 | log_duration                          | string | `"off"`     | no       | Logs the duration of each completed SQL statement.                                                                                   |
@@ -94,5 +93,3 @@ Examples for this module along with various configurations can be found in the [
 
 | Date     | Release | Change                                                        |
 | -------- | ------- | ------------------------------------------------------------- |
-| 20211128 | v2.0.0  | Final refactor with sane defaults and optional advanced logic |
-| 20211004 | v1.0.0  | The initial release of the Terraform module                   |

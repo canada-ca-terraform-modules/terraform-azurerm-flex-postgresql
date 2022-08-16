@@ -1,5 +1,13 @@
 # Storage Accounts
 
+########################
+### Storage Accounts ###
+########################
+
+# Manages an Azure Storage Account.
+#
+# https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_account
+#
 resource "azurerm_storage_account" "pgsql" {
   count = var.create_log_sa ? 1 : 0
 
@@ -30,6 +38,14 @@ resource "azurerm_storage_account" "pgsql" {
   }
 }
 
+#########################
+### Storage Container ###
+#########################
+
+# Manages a Container within an Azure Storage Account.
+#
+# https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_container
+#
 resource "azurerm_storage_container" "pgsql" {
   count = var.create_log_sa ? 1 : 0
 
