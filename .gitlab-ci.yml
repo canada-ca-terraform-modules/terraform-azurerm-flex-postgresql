@@ -1,0 +1,7 @@
+variables:
+  TERRAFORM_FILES_PATH: "./examples"
+
+include:
+  - project: cloudnative/gitlab/gitlabci/terraform
+    ref: v2.X
+    file: .module.terraform.gitlab-ci.yml

@@ -1,4 +1,17 @@
-# Azure Database for PostgreSQL - Flexible Server
+##############################
+### User Assigned Identity ###
+##############################
+
+# Manages a User Assigned Identity.
+#
+# https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/user_assigned_identity
+#
+resource "azurerm_user_assigned_identity" "pgsql" {
+  name                = "${var.name}-db-msi"
+  resource_group_name = var.resource_group
+  location            = var.location
+  tags                = var.tags
+}
 
 ####################################
 ### Managed PostgreSQL for Azure ###
@@ -23,6 +36,11 @@ resource "azurerm_postgresql_flexible_server" "pgsql" {
   version    = var.pgsql_version
   storage_mb = var.storagesize_mb
 
+  customer_managed_key {
+    key_vault_key_id                  = azurerm_key_vault_key.cmk.id
+    primary_user_assigned_identity_id = azurerm_user_assigned_identity.pgsql.id
+  }
+
   backup_retention_days        = 35
   geo_redundant_backup_enabled = var.geo_redundant_backup_enabled
   zone                         = 1
@@ -31,7 +49,8 @@ resource "azurerm_postgresql_flexible_server" "pgsql" {
 
   lifecycle {
     ignore_changes = [
-      tags
+      tags,
+      zone
     ]
   }
 }
