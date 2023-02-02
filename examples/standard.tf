@@ -1,27 +1,46 @@
+#####################
+### Prerequisites ###
+#####################
+
 provider "azurerm" {
   features {}
 }
 
-module "postgresql_example" {
-  source = "git::https://github.com/canada-ca-terraform-modules/terraform-azurerm-flex-postgresql.git?ref=main"
+provider "azurerm" {
+  features {}
+  alias = "dns_zone_provider"
+}
 
-  name = "psqlservername"
+###############################
+### Managed PostgreSQL for Azure ###
+###############################
+
+# Manages a PostgreSQL Flexible Server.
+#
+# https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/postgresql_flexible_server
+#
+module "postgresql_example" {
+  source = "../"
+
+  name = "pgsqlservername"
+
+  location       = "canadacentral"
+  resource_group = "pgsql-dev-rg"
+
   databases = {
-    psqlservername1 = { collation = "en_US.utf8" },
-    psqlservername2 = { chartset = "utf8" },
-    psqlservername3 = { chartset = "utf8", collation = "en_US.utf8" },
-    psqlservername4 = {}
+    pgsqlservername1 = { collation = "en_US.utf8" },
+    pgsqlservername2 = { chartset = "utf8" },
+    pgsqlservername3 = { chartset = "utf8", collation = "en_US.utf8" },
+    pgsqlservername4 = {}
   }
 
-  administrator_login    = "psqladmin"
-  administrator_password = "pgsql1313"
+  administrator_login    = "pgsqladmin"
+  administrator_password = "pgSql1313"
 
   sku_name       = "GP_Standard_D4ds_v4"
   pgsql_version  = "13"
   storagesize_mb = 262144
 
-  location       = "canadacentral"
-  resource_group = "psql-dev-rg"
 
   ip_rules       = []
   firewall_rules = []
@@ -37,4 +56,8 @@ module "postgresql_example" {
     "tier" = "k8s"
   }
 
+  providers = {
+    azurerm                   = azurerm
+    azurerm.dns_zone_provider = azurerm.dns_zone_provider
+  }
 }
