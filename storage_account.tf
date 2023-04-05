@@ -7,7 +7,7 @@
 # https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_account
 #
 resource "azurerm_storage_account" "pgsql" {
-  count = var.create_log_sa ? 1 : 0
+  count = var.sa_create_log ? 1 : 0
 
   name                            = substr("${replace(var.name, "-", "")}pgsql", 0, 24)
   location                        = var.location
@@ -21,9 +21,9 @@ resource "azurerm_storage_account" "pgsql" {
   min_tls_version                 = "TLS1_2"
 
   network_rules {
-    default_action             = var.subnet_id == null ? "Allow" : "Deny"
+    default_action             = "Deny"
     ip_rules                   = var.ip_rules
-    virtual_network_subnet_ids = var.subnet_id == null ? [] : [var.subnet_id]
+    virtual_network_subnet_ids = var.sa_subnet_ids == null ? [] : var.sa_subnet_ids
     bypass                     = ["AzureServices"]
   }
 
@@ -45,7 +45,7 @@ resource "azurerm_storage_account" "pgsql" {
 # https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_container
 #
 resource "azurerm_storage_container" "pgsql" {
-  count = var.create_log_sa ? 1 : 0
+  count = var.sa_create_log ? 1 : 0
 
   name                  = "${replace(var.name, "-", "")}pgsql"
   storage_account_name  = azurerm_storage_account.pgsql[count.index].name

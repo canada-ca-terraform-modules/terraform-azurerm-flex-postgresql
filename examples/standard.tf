@@ -22,8 +22,7 @@ provider "azurerm" {
 module "postgresql_example" {
   source = "../"
 
-  name = "pgsqlservername"
-
+  name           = "pgsqlservername"
   location       = "canadacentral"
   resource_group = "pgsql-dev-rg"
 
@@ -41,7 +40,6 @@ module "postgresql_example" {
   pgsql_version  = "13"
   storagesize_mb = 262144
 
-
   ip_rules       = []
   firewall_rules = []
 
@@ -51,6 +49,8 @@ module "postgresql_example" {
     logs          = ["all"]
     metrics       = ["all"]
   }
+  sa_create_log = true
+  sa_subnet_ids = []
 
   tags = {
     "tier" = "k8s"

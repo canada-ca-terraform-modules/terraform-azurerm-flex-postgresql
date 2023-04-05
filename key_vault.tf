@@ -7,7 +7,7 @@
 # https://gitlab.k8s.cloud.statcan.ca/cloudnative/platform/terraform/terraform-azure-key-vault.git
 #
 module "enc_key_vault" {
-  source = "git::https://gitlab.k8s.cloud.statcan.ca/cloudnative/platform/terraform/terraform-azure-key-vault.git?ref=v1.1.0"
+  source = "git::https://gitlab.k8s.cloud.statcan.ca/cloudnative/platform/terraform/terraform-azure-key-vault.git?ref=v1.1.4"
 
   prefix              = "${var.name}-enc"
   resource_group_name = var.resource_group
@@ -16,12 +16,12 @@ module "enc_key_vault" {
   purge_protection_enabled   = true
   soft_delete_retention_days = 90
 
-  public_network_access_enabled = false
-  private_endpoints = [
-    {
-      subnet_id = var.subnet_id
-    }
-  ]
+  public_network_access_enabled = var.public_network_access_enabled
+  default_network_access_action = "Deny"
+  service_endpoint_subnet_ids   = var.kv_subnet_ids == null ? [] : var.kv_subnet_ids
+  ip_rules                      = var.ip_rules
+
+  private_endpoints = var.kv_private_endpoints
 
   tags = var.tags
 
@@ -54,6 +54,11 @@ resource "azurerm_key_vault_key" "cmk" {
     "verify",
     "wrapKey",
   ]
+
+  depends_on = [
+    azurerm_key_vault_access_policy.cmk,
+    azurerm_key_vault_access_policy.runner_manage_keys,
+  ]
 }
 
 ############################
@@ -71,5 +76,30 @@ resource "azurerm_key_vault_access_policy" "cmk" {
     "List",
     "UnwrapKey",
     "WrapKey",
+  ]
+
+  depends_on = [
+    module.enc_key_vault
+  ]
+}
+
+# Allow the runner to manage the key vault keys
+resource "azurerm_key_vault_access_policy" "runner_manage_keys" {
+  key_vault_id = module.enc_key_vault.id
+  tenant_id    = data.azurerm_client_config.current.tenant_id
+  object_id    = data.azurerm_client_config.current.object_id
+
+  key_permissions = [
+    "Get",
+    "Create",
+    "Delete",
+    "Purge",
+    "Recover",
+    "Update",
+    "GetRotationPolicy"
+  ]
+
+  depends_on = [
+    module.enc_key_vault
   ]
 }

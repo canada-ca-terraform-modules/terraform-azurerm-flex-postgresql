@@ -72,7 +72,7 @@ variable "tags" {
 ### Networking ###
 ##################
 
-variable "subnet_id" {
+variable "delegated_subnet_id" {
   description = "The subnet where you want the database created. The subnet must be delegated to Microsoft.DBforPostgreSQL/flexibleServers."
   type        = string
   default     = null
@@ -81,6 +81,45 @@ variable "subnet_id" {
 variable "private_dns_zone_id" {
   description = "The ID of the private DNS zone to create the PostgreSQL Flexible Server. The private DNS zone must end with the suffix .postgres.database.azure.com."
   type        = string
+  default     = null
+}
+
+variable "kv_private_endpoints" {
+  description = "The name of an existing subnet to deploy and allocate private IP addresses from a virtual network. It is used to create a private endpoint between the key vault the module creates and the specified subnet."
+  type = list(object({
+    subnet_id        = optional(string) // mutually exclusive with the vnet_name, vnet_rg_name and subnet_name fields
+    vnet_name        = optional(string)
+    vnet_rg_name     = optional(string)
+    subnet_name      = optional(string)
+    dns_zone_rg_name = optional(string, "network-management-rg")
+  }))
+  default = []
+
+  validation {
+    condition = alltrue([
+      for entry in var.kv_private_endpoints :
+      (entry.subnet_id != null && entry.vnet_name == null && entry.vnet_rg_name == null && entry.subnet_name == null) ||
+      (entry.subnet_id != null && can(regex("^/subscription/(.+)/resourceGroups/(.+)/providers/Microsoft.Network/virtualNetworks/(.+)/subnets/(.+)", entry.subnet_id))) ||
+      (entry.subnet_id == null && entry.vnet_name != null && entry.vnet_rg_name != null && entry.subnet_name != null)
+    ])
+    error_message = "Either set the subnet_id field or the vnet_name, vnet_rg_name and subnet_name fields."
+  }
+}
+
+variable "public_network_access_enabled" {
+  description = "(Required) Whether or not public network access is allowed."
+  default     = false
+}
+
+variable "kv_subnet_ids" {
+  description = "The subnets for the key vault."
+  type        = list(string)
+  default     = null
+}
+
+variable "sa_subnet_ids" {
+  description = "The subnets for the storage account."
+  type        = list(string)
   default     = null
 }
 
@@ -99,7 +138,7 @@ variable "diagnostics" {
   default = null
 }
 
-variable "create_log_sa" {
+variable "sa_create_log" {
   description = "Creates a storage account to be used for diagnostics logging of the PostgreSQL database created if the variable is set to `true`."
   type        = bool
   default     = false
@@ -139,152 +178,35 @@ variable "kv_pointer_sqladmin_password" {
 ### Parameters ###
 ##################
 
-variable "client_min_messages" {
-  description = "(Optional) Sets the message levels that are sent to the client."
-  default     = "log"
-}
-
-variable "debug_print_parse" {
-  description = "(Optional) Logs each query's parse tree."
-  default     = "off"
-}
-
-variable "debug_print_plan" {
-  description = "(Optional) Logs each query's execution plan."
-  default     = "off"
-}
-
-variable "debug_print_rewritten" {
-  description = "(Optional) Logs each query's rewritten parse tree."
-  default     = "off"
-}
-
-variable "log_checkpoints" {
-  description = "(Optional) Logs each checkpoint."
-  default     = "on"
-}
-
-variable "log_connections" {
-  description = "(Optional) Logs each successful connection."
-  default     = "on"
-}
-
-variable "log_disconnections" {
-  description = "(Optional) Logs end of a session, including duration."
-  default     = "on"
-}
-
-variable "log_duration" {
-  description = "(Optional) Logs the duration of each completed SQL statement."
-  default     = "off"
-}
-
-variable "log_error_verbosity" {
-  description = "(Optional) Sets the verbosity of logged messages."
-  default     = "default"
-}
-
-variable "log_lock_waits" {
-  description = "(Optional) Logs long lock waits."
-  default     = "off"
-}
-
-variable "log_min_duration_statement" {
-  description = "(Optional) Sets the minimum execution time (in milliseconds) above which statements will be logged. -1 disables logging statement durations."
-  default     = "10"
-}
-
-variable "log_min_error_statement" {
-  description = "(Optional) Causes all statements generating error at or above this level to be logged."
-  default     = "error"
-}
-
-variable "log_min_messages" {
-  description = "(Optional) Sets the message levels that are logged."
-  default     = "warning"
-}
-
-variable "log_statement" {
-  description = "(Optional) Sets the type of statements logged."
-  default     = "ddl"
-}
-
-variable "row_security" {
-  description = "(Optional) Enable row security."
-  default     = "on"
-}
-
-variable "checkpoint_warning" {
-  description = "(Optional) Enables warnings if checkpoint segments are filled more frequently than this. Unit is s."
-  default     = "0"
-}
-
-variable "connection_throttling" {
-  description = "(Optional) Enables temporary connection throttling per IP for too many invalid password login failures."
-  default     = "on"
-}
-
-variable "maintenance_work_mem" {
-  description = "(Optional) Sets the maximum memory to be used for maintenance operations. Unit is kb."
-  default     = "32000"
-}
-
-variable "min_wal_size" {
-  description = "(Optional) Sets the minimum size to shrink the WAL to. Unt is mb."
-  default     = "512"
-}
-
-variable "max_wal_size" {
-  description = "(Optional) Sets the WAL size that triggers a checkpoint. Unit is mb."
-  default     = "512"
-}
-
-variable "pg_stat_statements_track_utility" {
-  description = "(Optional) Selects whether utility commands are tracked by pg_stat_statements."
-  default     = "off"
-}
-
-variable "pg_qs_track_utility" {
-  description = "(Optional) Selects whether utility commands are tracked by pg_qs."
-  default     = "on"
-}
-
-variable "pg_qs_query_capture_mode" {
-  description = "(Optional) Selects which statements are tracked by pg_qs."
-  default     = "top"
-}
-
-variable "pgms_wait_sampling_query_capture_mode" {
-  description = "(Optional) Selects which statements are tracked by the pgms_wait_sampling extension."
-  default     = "all"
-}
-
-variable "synchronous_commit" {
-  description = "(Optional) Sets the current transaction's synchronization level."
-  default     = "on"
-}
-
-variable "temp_buffers" {
-  description = "(Optional) Sets the maximum number of temporary buffers used by each database session. Unit is 8kb."
-  default     = "16384"
-}
-
-variable "wal_buffers" {
-  description = "(Optional) Sets the number of disk-page buffers in shared memory for WAL. Any change requires restarting the server to take effect. Unit is 8kb."
-  default     = "8192"
-}
-
-variable "wal_writer_delay" {
-  description = "(Optional) Time between WAL flushes performed in the WAL writer. Unit is ms."
-  default     = "200"
-}
-
-variable "wal_writer_flush_after" {
-  description = "(Optional) Amount of WAL written out by WAL writer that triggers a flush. Unit is 8kb."
-  default     = "128"
-}
-
-variable "work_mem" {
-  description = "(Optional) Sets the amount of memory to be used by internal sort operations and hash tables before writing to temporary disk files. Unit is kb."
-  default     = "2048000"
+variable "postgresql_configurations" {
+  type = map(string)
+  default = {
+    "client_min_messages"                   = "log"
+    "debug_print_parse"                     = "on"
+    "debug_print_plan"                      = "off"
+    "debug_print_rewritten"                 = "off"
+    "log_checkpoints"                       = "on"
+    "log_duration"                          = "off"
+    "log_error_verbosity"                   = "default"
+    "log_lock_waits"                        = "off"
+    "log_min_duration_statement"            = "10"
+    "log_min_error_statement"               = "error"
+    "log_min_messages"                      = "warning"
+    "log_statement"                         = "ddl"
+    "row_security"                          = "on"
+    "checkpoint_warning"                    = "0"
+    "connection_throttle.enable"            = "on"
+    "maintenance_work_mem"                  = "32000"
+    "min_wal_size"                          = "512"
+    "max_wal_size"                          = "512"
+    "pg_stat_statements.track_utility"      = "off"
+    "pg_qs.track_utility"                   = "off"
+    "pg_qs.query_capture_mode"              = "top"
+    "pgms_wait_sampling.query_capture_mode" = "all"
+    "temp_buffers"                          = "16384"
+    "wal_buffers"                           = "8192"
+    "wal_writer_delay"                      = "200"
+    "wal_writer_flush_after"                = "128"
+    "work_mem"                              = "2048000"
+  }
 }
