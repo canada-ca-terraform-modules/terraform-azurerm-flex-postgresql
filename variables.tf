@@ -29,7 +29,7 @@ variable "firewall_rules" {
 variable "geo_redundant_backup_enabled" {
   description = "Is Geo-Redundant backup enabled on the PostgreSQL Flexible Server."
   type        = bool
-  default     = true
+  default     = false
 }
 
 variable "location" {
