@@ -100,9 +100,10 @@ resource "azurerm_postgresql_flexible_server_configuration" "pgsql" {
 # https://registry.terraform.io/providers/cyrilgdn/postgresql/latest/docs/resources/postgresql_extension
 #
 resource "postgresql_extension" "pgcrypto" {
+  for_each     = var.databases
   provider     = postgresql
   name         = "pgcrypto"
-  database     = azurerm_postgresql_flexible_server_database.pgsql.name
+  database     = azurerm_postgresql_flexible_server_database.pgsql[each.key].name
   drop_cascade = true
 }
 
@@ -111,8 +112,9 @@ resource "postgresql_extension" "pgcrypto" {
 # https://registry.terraform.io/providers/cyrilgdn/postgresql/latest/docs/resources/postgresql_extension
 #
 resource "postgresql_extension" "postgis" {
+  for_each     = var.databases
   provider     = postgresql
   name         = "postgis"
-  database     = azurerm_postgresql_flexible_server_database.pgsql.name
+  database     = azurerm_postgresql_flexible_server_database.pgsql[each.key].name
   drop_cascade = true
 }
