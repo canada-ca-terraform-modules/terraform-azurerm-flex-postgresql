@@ -102,7 +102,7 @@ resource "azurerm_postgresql_flexible_server_configuration" "pgsql" {
 resource "postgresql_extension" "pgcrypto" {
   provider     = postgresql
   name         = "pgcrypto"
-  database     = azurerm_postgresql_flexible_server_database.this.name
+  database     = azurerm_postgresql_flexible_server_database.pgsql.name
   drop_cascade = true
 }
 
@@ -113,6 +113,6 @@ resource "postgresql_extension" "pgcrypto" {
 resource "postgresql_extension" "postgis" {
   provider     = postgresql
   name         = "postgis"
-  database     = azurerm_postgresql_flexible_server_database.this.name
+  database     = azurerm_postgresql_flexible_server_database.pgsql.name
   drop_cascade = true
 }
