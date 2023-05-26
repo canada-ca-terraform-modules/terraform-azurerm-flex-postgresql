@@ -9,5 +9,9 @@ terraform {
       version               = ">= 3.15, < 4.0"
       configuration_aliases = [azurerm.dns_zone_provider]
     }
+    postgresql = {
+      source  = "cyrilgdn/postgresql"
+      version = "1.19.0"
+    }
   }
 }

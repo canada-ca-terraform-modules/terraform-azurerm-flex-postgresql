@@ -13,12 +13,14 @@ Examples for this module along with various configurations can be found in the [
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.3.0, < 2.0.0 |
 | <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | >= 3.15, < 4.0 |
+| <a name="requirement_postgresql"></a> [postgresql](#requirement\_postgresql) | 1.19.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
 | <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | 3.50.0 |
+| <a name="provider_postgresql"></a> [postgresql](#provider\_postgresql) | 1.19.0 |
 
 ## Modules
 
@@ -48,7 +50,7 @@ Examples for this module along with various configurations can be found in the [
 | <a name="input_kv_subnet_ids"></a> [kv\_subnet\_ids](#input\_kv\_subnet\_ids) | The subnets for the key vault. | `list(string)` | `null` | no |
 | <a name="input_location"></a> [location](#input\_location) | Specifies the supported Azure location where the resource exists. | `string` | `"canadacentral"` | no |
 | <a name="input_pgsql_version"></a> [pgsql\_version](#input\_pgsql\_version) | The version of the PostgreSQL Flexible Server. | `string` | `"13"` | no |
-| <a name="input_postgresql_configurations"></a> [postgresql\_configurations](#input\_postgresql\_configurations) | n/a | `map(string)` | <pre>{<br>  "checkpoint_warning": "0",<br>  "client_min_messages": "log",<br>  "connection_throttle.enable": "on",<br>  "debug_print_parse": "on",<br>  "debug_print_plan": "off",<br>  "debug_print_rewritten": "off",<br>  "log_checkpoints": "on",<br>  "log_duration": "off",<br>  "log_error_verbosity": "default",<br>  "log_lock_waits": "off",<br>  "log_min_duration_statement": "10",<br>  "log_min_error_statement": "error",<br>  "log_min_messages": "warning",<br>  "log_statement": "ddl",<br>  "maintenance_work_mem": "32000",<br>  "max_wal_size": "512",<br>  "min_wal_size": "512",<br>  "pg_qs.query_capture_mode": "top",<br>  "pg_qs.track_utility": "off",<br>  "pg_stat_statements.track_utility": "off",<br>  "pgms_wait_sampling.query_capture_mode": "all",<br>  "row_security": "on",<br>  "temp_buffers": "16384",<br>  "wal_buffers": "8192",<br>  "wal_writer_delay": "200",<br>  "wal_writer_flush_after": "128",<br>  "work_mem": "2048000"<br>}</pre> | no |
+| <a name="input_postgresql_configurations"></a> [postgresql\_configurations](#input\_postgresql\_configurations) | n/a | `map(string)` | <pre>{<br>  "azure.extensions": "POSTGIS,PGCRYPTO",<br>  "checkpoint_warning": "0",<br>  "client_min_messages": "log",<br>  "connection_throttle.enable": "on",<br>  "debug_pretty_print": "on",<br>  "debug_print_parse": "off",<br>  "debug_print_plan": "off",<br>  "debug_print_rewritten": "off",<br>  "log_checkpoints": "on",<br>  "log_duration": "off",<br>  "log_error_verbosity": "verbose",<br>  "log_line_prefix": "%m [%p] %q[user=%u,db=%d,app=%a,client=%h] ",<br>  "log_lock_waits": "off",<br>  "log_min_duration_statement": "10",<br>  "log_min_error_statement": "error",<br>  "log_min_messages": "warning",<br>  "log_statement": "ddl",<br>  "maintenance_work_mem": "32000",<br>  "max_wal_size": "512",<br>  "min_wal_size": "512",<br>  "pg_qs.query_capture_mode": "top",<br>  "pg_qs.track_utility": "off",<br>  "pg_stat_statements.track_utility": "off",<br>  "pgaudit.log": "ddl",<br>  "pgms_wait_sampling.query_capture_mode": "all",<br>  "row_security": "on",<br>  "temp_buffers": "16384",<br>  "wal_buffers": "8192",<br>  "wal_writer_delay": "200",<br>  "wal_writer_flush_after": "128",<br>  "work_mem": "2048000"<br>}</pre> | no |
 | <a name="input_private_dns_zone_id"></a> [private\_dns\_zone\_id](#input\_private\_dns\_zone\_id) | The ID of the private DNS zone to create the PostgreSQL Flexible Server. The private DNS zone must end with the suffix .postgres.database.azure.com. | `string` | `null` | no |
 | <a name="input_public_network_access_enabled"></a> [public\_network\_access\_enabled](#input\_public\_network\_access\_enabled) | (Required) Whether or not public network access is allowed. | `bool` | `false` | no |
 | <a name="input_sa_create_log"></a> [sa\_create\_log](#input\_sa\_create\_log) | Creates a storage account to be used for diagnostics logging of the PostgreSQL database created if the variable is set to `true`. | `bool` | `false` | no |

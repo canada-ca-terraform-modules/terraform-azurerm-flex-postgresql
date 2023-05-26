@@ -181,6 +181,7 @@ variable "kv_pointer_sqladmin_password" {
 variable "postgresql_configurations" {
   type = map(string)
   default = {
+    "azure.extensions"                      = "POSTGIS,PGCRYPTO"
     "client_min_messages"                   = "log"
     "debug_pretty_print"                    = "on"
     "debug_print_parse"                     = "off"
