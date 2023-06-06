@@ -2,6 +2,26 @@
 ### Server ###
 ###############
 
+variable "active_directory_administrator" {
+  type = list(object({
+    object_id      = optional(string)
+    principal_name = optional(string)
+    principal_type = optional(string, "Group")
+  }))
+  default = []
+
+  validation {
+    condition = alltrue([
+      for entry in var.active_directory_administrator :
+      (entry.object_id != null) &&
+      (entry.principal_name != null) &&
+      (entry.principal_type != null) &&
+      (contains(["Group", "User", "ServicePrincipal"], entry.principal_type))
+    ])
+    error_message = "Invalid active_directory_administrator configuration. Make sure object_id, principal_name, and principal_type are not null, and principal_type is one of 'Group', 'User', or 'ServicePrincipal'."
+  }
+}
+
 variable "administrator_login" {
   description = "The Administrator Login for the PostgreSQL Flexible Server."
 }

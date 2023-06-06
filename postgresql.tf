@@ -36,6 +36,11 @@ resource "azurerm_postgresql_flexible_server" "pgsql" {
   version    = var.pgsql_version
   storage_mb = var.storagesize_mb
 
+  authentication {
+    active_directory_auth_enabled = true
+    tenant_id                     = data.azurerm_client_config.current.tenant_id
+  }
+
   identity {
     type         = "UserAssigned"
     identity_ids = [azurerm_user_assigned_identity.pgsql.id]
@@ -58,6 +63,22 @@ resource "azurerm_postgresql_flexible_server" "pgsql" {
       zone
     ]
   }
+}
+
+# Manages a PostgreSQL Flexible Server.
+#
+# Allows you to set a user or group as the AD administrator for a PostgreSQL Flexible Server.
+#
+resource "azurerm_postgresql_flexible_server_active_directory_administrator" "pgsql" {
+  for_each = var.active_directory_administrator
+
+  server_name         = azurerm_postgresql_flexible_server.pgsql.name
+  resource_group_name = var.resource_group
+
+  tenant_id      = data.azurerm_client_config.current.tenant_id
+  object_id      = each.value.object_id
+  principal_name = each.value.principal_name
+  principal_type = each.value.principal_type
 }
 
 # Manages a PostgreSQL Flexible Server Database.
