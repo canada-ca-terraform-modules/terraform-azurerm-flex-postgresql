@@ -127,15 +127,3 @@ resource "postgresql_extension" "pgcrypto" {
   database     = azurerm_postgresql_flexible_server_database.pgsql[each.key].name
   drop_cascade = true
 }
-
-# The postgresql_extension resource creates and manages an extension on a PostgreSQL server.
-#
-# https://registry.terraform.io/providers/cyrilgdn/postgresql/latest/docs/resources/postgresql_extension
-#
-resource "postgresql_extension" "postgis" {
-  for_each     = var.databases
-  provider     = postgresql
-  name         = "postgis"
-  database     = azurerm_postgresql_flexible_server_database.pgsql[each.key].name
-  drop_cascade = true
-}
