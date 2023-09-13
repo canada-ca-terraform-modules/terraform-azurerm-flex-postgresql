@@ -25,7 +25,6 @@ resource "azurerm_monitor_diagnostic_setting" "postgresql_server" {
 
       retention_policy {
         enabled = true
-        days    = 90
       }
     }
   }
@@ -39,7 +38,6 @@ resource "azurerm_monitor_diagnostic_setting" "postgresql_server" {
 
       retention_policy {
         enabled = true
-        days    = 90
       }
     }
   }
