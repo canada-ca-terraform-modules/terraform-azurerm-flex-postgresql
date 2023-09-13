@@ -22,10 +22,6 @@ resource "azurerm_monitor_diagnostic_setting" "postgresql_server" {
     content {
       category = log.value
       enabled  = contains(local.parsed_diag.log, "all") || contains(local.parsed_diag.log, log.value)
-
-      retention_policy {
-        enabled = true
-      }
     }
   }
 
@@ -35,10 +31,6 @@ resource "azurerm_monitor_diagnostic_setting" "postgresql_server" {
     content {
       category = metric.value
       enabled  = contains(local.parsed_diag.metric, "all") || contains(local.parsed_diag.metric, metric.value)
-
-      retention_policy {
-        enabled = true
-      }
     }
   }
 }
