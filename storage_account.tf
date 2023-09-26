@@ -9,7 +9,7 @@
 resource "azurerm_storage_account" "pgsql" {
   count = var.sa_create_log ? 1 : 0
 
-  name                            = substr("${replace(var.name, "-", "")}pgsql", 0, 24)
+  name                            = var.storage_account_name != null ? var.storage_account_name : substr("${replace(var.name, "-", "")}pgsql", 0, 24)
   location                        = var.location
   resource_group_name             = var.resource_group
   account_kind                    = "StorageV2"
