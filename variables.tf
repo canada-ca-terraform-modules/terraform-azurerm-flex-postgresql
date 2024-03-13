@@ -71,7 +71,7 @@ variable "pgsql_version" {
   default     = "13"
 }
 
-variable "resource_group" {
+variable "resource_group_name" {
   description = "The name of the resource group in which to create the PostgreSQL Flexible Server."
 }
 
@@ -93,6 +93,15 @@ variable "tags" {
   }
 }
 
+variable "project" {
+  description = "Name of client project"
+}
+
+variable "environment" {
+  description = "The environment used for keyvault access."
+}
+
+
 ##################
 ### Networking ###
 ##################
@@ -110,24 +119,28 @@ variable "private_dns_zone_id" {
 }
 
 variable "kv_private_endpoints" {
-  description = "The name of an existing subnet to deploy and allocate private IP addresses from a virtual network. It is used to create a private endpoint between the key vault the module creates and the specified subnet."
+  description = "The information required to create a private endpoint for the Key Vault."
   type = list(object({
-    subnet_id        = optional(string) // mutually exclusive with the vnet_name, vnet_rg_name and subnet_name fields
-    vnet_name        = optional(string)
-    vnet_rg_name     = optional(string)
-    subnet_name      = optional(string)
-    dns_zone_rg_name = optional(string, "network-management-rg")
+    sub_resource_name   = optional(string, "vault")
+    subnet_id           = string
+    private_dns_zone_id = string
   }))
   default = []
 
   validation {
     condition = alltrue([
       for entry in var.kv_private_endpoints :
-      (entry.subnet_id != null && entry.vnet_name == null && entry.vnet_rg_name == null && entry.subnet_name == null) ||
-      (entry.subnet_id != null && can(regex("^/subscription/(.+)/resourceGroups/(.+)/providers/Microsoft.Network/virtualNetworks/(.+)/subnets/(.+)", entry.subnet_id))) ||
-      (entry.subnet_id == null && entry.vnet_name != null && entry.vnet_rg_name != null && entry.subnet_name != null)
+      contains(["vault"], entry.sub_resource_name)
     ])
-    error_message = "Either set the subnet_id field or the vnet_name, vnet_rg_name and subnet_name fields."
+    error_message = "Invalid sub_resource_name within var.kv_private_endpoints. Expected the name to be 'vault'."
+  }
+
+  validation {
+    condition = alltrue([
+      for entry in var.kv_private_endpoints :
+      element(split("/", entry.private_dns_zone_id), 8) == "privatelink.vaultcore.azure.net"
+    ])
+    error_message = "Invalid private_dns_zone_id attribute within var.kv_private_endpoints. Expected a Private DNS Zone with the name 'privatelink.vaultcore.azure.net'"
   }
 }
 

@@ -7,10 +7,17 @@
 # https://gitlab.k8s.cloud.statcan.ca/cloudnative/platform/terraform/terraform-azure-key-vault.git
 #
 module "enc_key_vault" {
-  source = "git::https://gitlab.k8s.cloud.statcan.ca/cloudnative/platform/terraform/terraform-azure-key-vault.git?ref=v1.1.4"
+  source = "git::https://gitlab.k8s.cloud.statcan.ca/cloudnative/platform/terraform/terraform-azure-key-vault.git?ref=v4.0.0"
 
-  prefix              = "${var.name}-enc"
-  resource_group_name = var.resource_group
+  azure_resource_attributes = {
+    project     = var.project
+    environment = var.environment
+    location    = var.location
+    instance    = 1
+  }
+
+  user_defined        = "mysql"
+  resource_group_name = var.resource_group_name
 
   sku_name                   = "premium"
   purge_protection_enabled   = true
@@ -24,11 +31,6 @@ module "enc_key_vault" {
   private_endpoints = var.kv_private_endpoints
 
   tags = var.tags
-
-  providers = {
-    azurerm                   = azurerm
-    azurerm.dns_zone_provider = azurerm.dns_zone_provider
-  }
 }
 
 # Manages a Key Vault Key.

@@ -11,7 +11,7 @@ resource "azurerm_storage_account" "pgsql" {
 
   name                            = var.storage_account_name != null ? var.storage_account_name : substr("${replace(var.name, "-", "")}pgsql", 0, 24)
   location                        = var.location
-  resource_group_name             = var.resource_group
+  resource_group_name             = var.resource_group_name
   account_kind                    = "StorageV2"
   account_tier                    = "Standard"
   account_replication_type        = "LRS"
