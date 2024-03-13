@@ -26,7 +26,7 @@ Examples for this module along with various configurations can be found in the [
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_enc_key_vault"></a> [enc\_key\_vault](#module\_enc\_key\_vault) | git::https://gitlab.k8s.cloud.statcan.ca/cloudnative/platform/terraform/terraform-azure-key-vault.git | v1.1.4 |
+| <a name="module_enc_key_vault"></a> [enc\_key\_vault](#module\_enc\_key\_vault) | git::https://gitlab.k8s.cloud.statcan.ca/cloudnative/platform/terraform/terraform-azure-key-vault.git | v4.0.0 |
 
 ## Inputs
 

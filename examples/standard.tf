@@ -22,9 +22,9 @@ provider "azurerm" {
 module "postgresql_example" {
   source = "../"
 
-  name           = "pgsqlservername"
-  location       = "canadacentral"
-  resource_group = "pgsql-dev-rg"
+  name                = "pgsqlservername"
+  location            = "canadacentral"
+  resource_group_name = "pgsql-dev-rg"
 
   databases = {
     pgsqlservername1 = { collation = "en_US.utf8" },
@@ -51,6 +51,9 @@ module "postgresql_example" {
   }
   sa_create_log = true
   sa_subnet_ids = []
+
+  environment = "dev"
+  project     = ""
 
   tags = {
     "tier" = "k8s"

@@ -8,7 +8,7 @@
 #
 resource "azurerm_user_assigned_identity" "pgsql" {
   name                = "${var.name}-db-msi"
-  resource_group_name = var.resource_group
+  resource_group_name = var.resource_group_name
   location            = var.location
   tags                = var.tags
 }
@@ -24,7 +24,7 @@ resource "azurerm_user_assigned_identity" "pgsql" {
 resource "azurerm_postgresql_flexible_server" "pgsql" {
   name                = var.name
   location            = var.location
-  resource_group_name = var.resource_group
+  resource_group_name = var.resource_group_name
 
   delegated_subnet_id = var.delegated_subnet_id
   private_dns_zone_id = var.private_dns_zone_id
@@ -73,7 +73,7 @@ resource "azurerm_postgresql_flexible_server_active_directory_administrator" "pg
   count = length(var.active_directory_administrator)
 
   server_name         = azurerm_postgresql_flexible_server.pgsql.name
-  resource_group_name = var.resource_group
+  resource_group_name = var.resource_group_name
 
   tenant_id      = data.azurerm_client_config.current.tenant_id
   object_id      = var.active_directory_administrator[count.index].object_id
