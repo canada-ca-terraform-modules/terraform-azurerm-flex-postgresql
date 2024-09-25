@@ -73,6 +73,8 @@ Examples for this module along with various configurations can be found in the [
 
 | Date       | Release | Change                                               |
 | ---------- | ------- | ---------------------------------------------------- |
+| 2024-09-24 | v0.4.1  | Remove erroneous postgresql_extension                |
+| 2024-03-13 | v0.4.0  | Refernce new Keyvault Module                         |
 | 2023-04-04 | v0.3.0  | Breakup subnet logic to individual components        |
 | 2023-02-01 | v0.2.0  | Standards alignment and Customer Managed Key Support |
 | 2022-06-01 | v0.1.0  | Initial commit                                       |
