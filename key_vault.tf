@@ -16,7 +16,7 @@ module "enc_key_vault" {
     instance    = 1
   }
 
-  user_defined        = "mysql"
+  user_defined        = "pgsql"
   resource_group_name = var.resource_group_name
 
   sku_name                   = "premium"
@@ -98,7 +98,8 @@ resource "azurerm_key_vault_access_policy" "runner_manage_keys" {
     "Purge",
     "Recover",
     "Update",
-    "GetRotationPolicy"
+    "GetRotationPolicy",
+    "List"
   ]
 
   depends_on = [

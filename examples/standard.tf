@@ -1,6 +1,6 @@
 #####################
 ### Prerequisites ###
-#####################
+### az.tf         ###
 
 provider "azurerm" {
   features {}
@@ -10,6 +10,32 @@ provider "azurerm" {
   features {}
   alias = "dns_zone_provider"
 }
+
+provider "azurerm" {
+  features {}
+  alias = "mgmt"
+}
+
+### data.tf       ###
+
+data "azurerm_subnet" "back" {
+  name                 = "devcc-back"
+  resource_group_name  = "network-dev-rg"
+  virtual_network_name = "devcc-vnet"
+}
+
+data "azurerm_private_dns_zone" "kv" {
+  provider            = azurerm.mgmt
+  name                = "privatelink.vaultcore.azure.net"
+  resource_group_name = "network-management-rg"
+}
+
+locals {
+  subnet_ids = []
+}
+
+#####################
+
 
 ###############################
 ### Managed PostgreSQL for Azure ###
@@ -49,11 +75,22 @@ module "postgresql_example" {
     logs          = ["all"]
     metrics       = ["all"]
   }
-  sa_create_log = true
-  sa_subnet_ids = []
 
-  environment = "dev"
-  project     = ""
+  ## Keyvault
+  environment                   = "dev"
+  project                       = "hostingsql"
+  public_network_access_enabled = true
+  kv_subnet_ids                 = local.subnet_ids
+  kv_private_endpoints = [
+    {
+      subnet_id           = data.azurerm_subnet.back.id
+      private_dns_zone_id = data.azurerm_private_dns_zone.kv.id
+    }
+  ]
+  ## Storage Account
+  sa_create_log        = true
+  sa_subnet_ids        = local.subnet_ids
+  storage_account_name = "stndbmahmsamsa"
 
   tags = {
     "tier" = "k8s"

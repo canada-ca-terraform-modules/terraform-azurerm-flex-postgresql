@@ -115,15 +115,3 @@ resource "azurerm_postgresql_flexible_server_configuration" "pgsql" {
   server_id = azurerm_postgresql_flexible_server.pgsql.id
   value     = each.value
 }
-
-# The postgresql_extension resource creates and manages an extension on a PostgreSQL server.
-#
-# https://registry.terraform.io/providers/cyrilgdn/postgresql/latest/docs/resources/postgresql_extension
-#
-resource "postgresql_extension" "pgcrypto" {
-  for_each     = var.databases
-  provider     = postgresql
-  name         = "pgcrypto"
-  database     = azurerm_postgresql_flexible_server_database.pgsql[each.key].name
-  drop_cascade = true
-}
