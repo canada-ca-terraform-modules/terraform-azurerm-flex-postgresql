@@ -26,8 +26,9 @@ resource "azurerm_postgresql_flexible_server" "pgsql" {
   location            = var.location
   resource_group_name = var.resource_group_name
 
-  delegated_subnet_id = var.delegated_subnet_id
-  private_dns_zone_id = var.private_dns_zone_id
+  delegated_subnet_id           = var.delegated_subnet_id
+  private_dns_zone_id           = var.private_dns_zone_id
+  public_network_access_enabled = var.public_network_access_enabled
 
   administrator_login    = var.administrator_login
   administrator_password = (var.kv_pointer_enable && length(data.azurerm_key_vault_secret.pointer_sqladmin_password) > 0) ? data.azurerm_key_vault_secret.pointer_sqladmin_password[0].value : var.administrator_password
