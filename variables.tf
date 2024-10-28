@@ -118,6 +118,12 @@ variable "private_dns_zone_id" {
   default     = null
 }
 
+variable "public_network_access_enabled" {
+  description = "(Optional) Specifies whether this PostgreSQL Flexible Server is publicly accessible."
+  type        = bool
+  default     = false
+}
+
 variable "kv_private_endpoints" {
   description = "The information required to create a private endpoint for the Key Vault."
   type = list(object({
@@ -144,7 +150,7 @@ variable "kv_private_endpoints" {
   }
 }
 
-variable "public_network_access_enabled" {
+variable "kv_public_network_access_enabled" {
   description = "(Required) Whether or not public network access is allowed."
   default     = false
 }

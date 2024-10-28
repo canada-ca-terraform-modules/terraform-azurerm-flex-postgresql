@@ -73,6 +73,7 @@ Examples for this module along with various configurations can be found in the [
 
 | Date       | Release | Change                                               |
 | ---------- | ------- | ---------------------------------------------------- |
+| 2024-09-24 | v0.5.0  | Update args to leverage AzureRM > 4.0                |
 | 2024-09-24 | v0.4.1  | Remove erroneous postgresql_extension                |
 | 2024-03-13 | v0.4.0  | Refernce new Keyvault Module                         |
 | 2023-04-04 | v0.3.0  | Breakup subnet logic to individual components        |
