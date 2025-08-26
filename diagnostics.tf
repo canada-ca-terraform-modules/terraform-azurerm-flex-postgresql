@@ -16,21 +16,15 @@ resource "azurerm_monitor_diagnostic_setting" "postgresql_server" {
   eventhub_name                  = local.parsed_diag.event_hub_auth_id != null ? var.diagnostics.eventhub_name : null
   storage_account_id             = local.parsed_diag.storage_account_id
 
-  dynamic "log" {
-    for_each = data.azurerm_monitor_diagnostic_categories.postgresql_server[0].logs
+  dynamic "enabled_log" {
+    for_each = data.azurerm_monitor_diagnostic_categories.postgresql_server[0].log_category_types
 
     content {
-      category = log.value
-      enabled  = contains(local.parsed_diag.log, "all") || contains(local.parsed_diag.log, log.value)
+      category = enabled_log.value
     }
   }
 
-  dynamic "metric" {
-    for_each = data.azurerm_monitor_diagnostic_categories.postgresql_server[0].metrics
-
-    content {
-      category = metric.value
-      enabled  = contains(local.parsed_diag.metric, "all") || contains(local.parsed_diag.metric, metric.value)
-    }
+  enabled_metric {
+    category = "AllMetrics"
   }
 }

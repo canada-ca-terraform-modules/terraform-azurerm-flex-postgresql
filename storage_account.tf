@@ -48,6 +48,6 @@ resource "azurerm_storage_container" "pgsql" {
   count = var.sa_create_log ? 1 : 0
 
   name                  = "${replace(var.name, "-", "")}pgsql"
-  storage_account_name  = azurerm_storage_account.pgsql[count.index].name
+  storage_account_id    = azurerm_storage_account.pgsql[count.index].id
   container_access_type = "private"
 }

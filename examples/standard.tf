@@ -30,16 +30,33 @@ data "azurerm_private_dns_zone" "kv" {
   resource_group_name = "network-management-rg"
 }
 
+data "azurerm_private_dns_zone" "flex_dns_zone" {
+  name                = "privatelink.postgres.database.azure.com"
+  resource_group_name = "network-management-rg"
+  provider            = azurerm.dns_zone_provider
+}
+
 locals {
   subnet_ids = []
 }
 
 #####################
+# These variables can have their values set as CI/CD Variables with the names TF_VAR_PG_Admin_Username and TF_VAR_PG_Admin_Password.
 
+variable "PG_Admin_Username" {
+  type        = string
+  description = "The Administrator Login for the PostgreSQL Flexible Server."
+}
 
-###############################
+variable "PG_Admin_Password" {
+  type        = string
+  sensitive   = true
+  description = "The Password associated with the administrator_login for the PostgreSQL Flexible Server."
+}
+
+####################################
 ### Managed PostgreSQL for Azure ###
-###############################
+####################################
 
 # Manages a PostgreSQL Flexible Server.
 #
@@ -59,11 +76,11 @@ module "postgresql_example" {
     pgsqlservername4 = {}
   }
 
-  administrator_login    = "pgsqladmin"
-  administrator_password = "pgSql1313"
+  administrator_login    = var.PG_Admin_Username # See above variable definitions
+  administrator_password = var.PG_Admin_Password
 
   sku_name       = "GP_Standard_D4ds_v4"
-  pgsql_version  = "13"
+  pgsql_version  = "16"
   storagesize_mb = 262144
 
   ip_rules       = []
@@ -72,15 +89,16 @@ module "postgresql_example" {
   diagnostics = {
     destination   = ""
     eventhub_name = ""
-    logs          = ["all"]
-    metrics       = ["all"]
   }
 
+  delegated_subnet_id = data.azurerm_subnet.postgresql.id
+  private_dns_zone_id = data.azurerm_private_dns_zone.flex_dns_zone.id
+
   ## Keyvault
-  environment                   = "dev"
-  project                       = "hostingsql"
-  public_network_access_enabled = true
-  kv_subnet_ids                 = local.subnet_ids
+  environment                      = "dev"
+  project                          = "myproject"
+  kv_public_network_access_enabled = true
+  kv_subnet_ids                    = local.subnet_ids
   kv_private_endpoints = [
     {
       subnet_id           = data.azurerm_subnet.back.id

@@ -23,10 +23,12 @@ variable "active_directory_administrator" {
 }
 
 variable "administrator_login" {
+  type        = string
   description = "The Administrator Login for the PostgreSQL Flexible Server."
 }
 
 variable "administrator_password" {
+  type        = string
   description = "The Password associated with the administrator_login for the PostgreSQL Flexible Server."
   sensitive   = true
 }
@@ -47,57 +49,71 @@ variable "firewall_rules" {
 }
 
 variable "geo_redundant_backup_enabled" {
-  description = "Is Geo-Redundant backup enabled on the PostgreSQL Flexible Server."
   type        = bool
+  description = "Is Geo-Redundant backup enabled on the PostgreSQL Flexible Server."
   default     = false
 }
 
 variable "location" {
+  type        = string
   description = "Specifies the supported Azure location where the resource exists."
   default     = "canadacentral"
 }
 
 variable "name" {
+  type        = string
   description = "The name of the PostgreSQL Flexible Server."
 }
 
 variable "storage_account_name" {
+  type        = string
   description = "Name of the storage account used for diagnostics (optional, if not provided the name is auto-generated)."
   default     = null
 }
 
 variable "pgsql_version" {
+  type        = string
   description = "The version of the PostgreSQL Flexible Server."
-  default     = "13"
+  default     = "16"
+  validation {
+    condition     = contains(["13", "14", "15", "16"], var.pgsql_version)
+    error_message = "The version of PostgreSQL Flexible Server specified must be one of the currently supported versions 13, 14, 15, or 16."
+  }
 }
 
 variable "resource_group_name" {
+  type        = string
   description = "The name of the resource group in which to create the PostgreSQL Flexible Server."
 }
 
 variable "sku_name" {
+  type        = string
   description = "Specifies the SKU Name for this PostgreSQL Flexible Server."
   default     = "GP_Standard_D4ds_v4"
 }
 
 variable "storagesize_mb" {
-  description = "Specifies the version of PostgreSQL to use."
+  type        = number
+  description = "Specifies the storage size in MB for the PostgreSQL Flexible Server."
   default     = 262144
-}
-
-variable "tags" {
-  description = "A mapping of tags to assign to the resource."
-  type        = map(string)
-  default = {
-    environment : "dev"
+  validation {
+    condition     = contains([32768, 65536, 131072, 262144, 524288, 1048576, 2097152, 4193280, 4194304, 8388608, 16777216, 33553408], var.storagesize_mb)
+    error_message = "The storage size must be set to one of the supported values 32768, 65536, 131072, 262144, 524288, 1048576, 2097152, 4193280, 4194304, 8388608, 16777216, or 33553408."
   }
 }
 
+variable "tags" {
+  type        = map(string)
+  description = "A mapping of tags to assign to the resource."
+}
+
 variable "project" {
+  type        = string
   description = "Name of client project"
 }
 
 variable "environment" {
+  type        = string
   description = "The environment used for keyvault access."
 }
 
@@ -107,31 +123,31 @@ variable "environment" {
 ##################
 
 variable "delegated_subnet_id" {
-  description = "The subnet where you want the database created. The subnet must be delegated to Microsoft.DBforPostgreSQL/flexibleServers."
   type        = string
+  description = "The subnet where you want the database created. The subnet must be delegated to Microsoft.DBforPostgreSQL/flexibleServers."
   default     = null
 }
 
 variable "private_dns_zone_id" {
-  description = "The ID of the private DNS zone to create the PostgreSQL Flexible Server. The private DNS zone must end with the suffix .postgres.database.azure.com."
   type        = string
+  description = "The ID of the private DNS zone to create the PostgreSQL Flexible Server. The private DNS zone must end with the suffix .postgres.database.azure.com."
   default     = null
 }
 
 variable "public_network_access_enabled" {
-  description = "(Optional) Specifies whether this PostgreSQL Flexible Server is publicly accessible."
   type        = bool
+  description = "(Optional) Specifies whether this PostgreSQL Flexible Server is publicly accessible."
   default     = false
 }
 
 variable "kv_private_endpoints" {
-  description = "The information required to create a private endpoint for the Key Vault."
   type = list(object({
     sub_resource_name   = optional(string, "vault")
     subnet_id           = string
     private_dns_zone_id = string
   }))
-  default = []
+  description = "The information required to create a private endpoint for the Key Vault."
+  default     = []
 
   validation {
     condition = alltrue([
@@ -151,19 +167,20 @@ variable "kv_private_endpoints" {
 }
 
 variable "kv_public_network_access_enabled" {
+  type        = bool
   description = "(Required) Whether or not public network access is allowed."
   default     = false
 }
 
 variable "kv_subnet_ids" {
-  description = "The subnets for the key vault."
   type        = list(string)
+  description = "The subnets for the key vault."
   default     = null
 }
 
 variable "sa_subnet_ids" {
-  description = "The subnets for the storage account."
   type        = list(string)
+  description = "The subnets for the storage account."
   default     = null
 }
 
@@ -172,19 +189,17 @@ variable "sa_subnet_ids" {
 ###############
 
 variable "diagnostics" {
-  description = "Diagnostic settings for those resources that support it."
   type = object({
     destination   = string
     eventhub_name = string
-    logs          = list(string)
-    metrics       = list(string)
   })
-  default = null
+  description = "Diagnostic settings for those resources that support it."
+  default     = null
 }
 
 variable "sa_create_log" {
-  description = "Creates a storage account to be used for diagnostics logging of the PostgreSQL database created if the variable is set to `true`."
   type        = bool
+  description = "Creates a storage account to be used for diagnostics logging of the PostgreSQL database created if the variable is set to `true`."
   default     = false
 }
 
@@ -199,21 +214,25 @@ variable "sa_create_log" {
 ######################################################################
 
 variable "kv_pointer_enable" {
+  type        = bool
   description = "Flag kv_pointer_enable can either be `true` (state from key vault), or `false` (state from terraform)."
   default     = false
 }
 
 variable "kv_pointer_name" {
+  type        = string
   description = "The key vault name to be used when kv_pointer_enable is set to `true`."
   default     = null
 }
 
 variable "kv_pointer_rg" {
+  type        = string
   description = "The key vault resource group to be used when kv_pointer_enable is set to `true`."
   default     = null
 }
 
 variable "kv_pointer_sqladmin_password" {
+  type        = string
   description = "The sqladmin password to be looked up in key vault when kv_pointer_enable is set to `true`."
   default     = null
 }
