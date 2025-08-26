@@ -7,7 +7,7 @@
 # https://gitlab.k8s.cloud.statcan.ca/cloudnative/platform/terraform/terraform-azure-key-vault.git
 #
 module "enc_key_vault" {
-  source = "git::https://gitlab.k8s.cloud.statcan.ca/cloudnative/platform/terraform/terraform-azure-key-vault.git?ref=v4.0.0"
+  source = "git::https://gitlab.k8s.cloud.statcan.ca/cloudnative/platform/terraform/terraform-azure-key-vault.git?ref=v5.0.0"
 
   azure_resource_attributes = {
     project     = var.project
