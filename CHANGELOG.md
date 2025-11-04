@@ -1,5 +1,15 @@
 # CHANGE LOG
 
+## 1.1.0 (Nov 04, 2025)
+
+FEATURES:
+
+ENHANCEMENTS:
+
+* Added ability to select PostgreSQL v17.
+
+BUG FIXES:
+
 ## 1.0.0 (Aug 26, 2025)
 
 FEATURES:

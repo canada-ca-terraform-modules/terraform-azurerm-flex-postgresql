@@ -80,7 +80,7 @@ module "postgresql_example" {
   administrator_password = var.PG_Admin_Password
 
   sku_name       = "GP_Standard_D4ds_v4"
-  pgsql_version  = "16"
+  pgsql_version  = "17"
   storagesize_mb = 262144
 
   ip_rules       = []
