@@ -73,11 +73,11 @@ variable "storage_account_name" {
 
 variable "pgsql_version" {
   type        = string
-  description = "The version of the PostgreSQL Flexible Server. Currently supported versions 13, 14, 15, 16, or 17."
+  description = "The version of the PostgreSQL Flexible Server. Currently supported versions 14, 15, 16, 17, or 18."
   default     = "17"
   validation {
-    condition     = contains(["13", "14", "15", "16", "17"], var.pgsql_version)
-    error_message = "The version of PostgreSQL Flexible Server specified must be one of the currently supported versions 13, 14, 15, 16, or 17."
+    condition     = contains(["14", "15", "16", "17", "18"], var.pgsql_version)
+    error_message = "The version of PostgreSQL Flexible Server specified must be one of the currently supported versions 14, 15, 16, 17, or 18."
   }
 }
 
