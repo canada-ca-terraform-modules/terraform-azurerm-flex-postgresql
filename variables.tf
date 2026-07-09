@@ -261,7 +261,6 @@ variable "postgresql_configurations" {
     "log_statement"                         = "ddl"
     "row_security"                          = "on"
     "checkpoint_warning"                    = "0"
-    "connection_throttle.enable"            = "on"
     "maintenance_work_mem"                  = "32000"
     "min_wal_size"                          = "512"
     "max_wal_size"                          = "512"
