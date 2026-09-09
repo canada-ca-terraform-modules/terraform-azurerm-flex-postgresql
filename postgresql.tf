@@ -43,7 +43,7 @@ resource "azurerm_postgresql_flexible_server" "pgsql" {
   }
 
   identity {
-    type         = "UserAssigned"
+    type         = "SystemAssigned, UserAssigned"
     identity_ids = [azurerm_user_assigned_identity.pgsql.id]
   }
 
