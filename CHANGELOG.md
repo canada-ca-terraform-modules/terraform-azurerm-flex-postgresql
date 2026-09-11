@@ -1,6 +1,6 @@
 # CHANGE LOG
 
-## 1.3.0
+## 1.3.0 (Sept 11, 2026)
 
 FEATURES:
 
