@@ -1,5 +1,23 @@
 # CHANGE LOG
 
+## 1.3.0
+
+FEATURES:
+
+* Updated providers to support AzureRM v5.
+
+## 1.2.1 (July 09, 2026)
+
+BUG FIXES:
+
+* Removed depreciated setting `connection_throttle.enable`.
+
+## 1.2.0 (June 23, 2026)
+
+FEATURES:
+
+* Add support for PostgreSQL v18
+
 ## 1.1.0 (Nov 04, 2025)
 
 FEATURES:
